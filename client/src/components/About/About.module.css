@@ -1,0 +1,51 @@
+.contein {
+  display: flex;
+  gap: 25px;
+  font-size: 18px;
+  letter-spacing: 1.15px;
+  text-align: start;
+  color: #f5faff;
+  margin: 0 auto;
+  width: 100%;
+}
+
+
+.contein p {
+  margin: 0px;
+  text-align: justify;
+  background-color: rgba(0, 0, 0, 0.35);
+  padding: 25px;
+  border-radius: 20px;
+}
+
+.contein p:hover {
+  transform: scale(1.03);
+  transition: transform 0.5s ease-in-out;
+  background-color: rgba(0, 0, 0, 0.55);
+}
+
+.contein p svg {
+  fill: #ff9f3e;
+  width: 24px;
+  height: 24px;
+  margin-right: 5px;
+}
+
+@media screen and (max-width: 1060px) {
+  .contein {
+    flex-direction: column;
+    gap: 15px;
+  }
+}
+
+@keyframes pulse {
+  0% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.1);
+  }
+  100% {
+    transform: scale(1);
+  }
+}

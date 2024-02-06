@@ -1,0 +1,20 @@
+.deleteIcon {
+  font-size: 22px;
+}
+
+.deleteIcon:hover {
+  color: #f54652;
+}
+
+.icon:hover {
+  fill: orange;
+}
+
+.iconsConteiner {
+  display: flex;
+  gap: 20px;
+}
+
+.rate {
+  color: orange;
+}
