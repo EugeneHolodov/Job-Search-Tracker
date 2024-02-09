@@ -18,10 +18,14 @@ import {
 import styles from "./SingleCard.module.css";
 import { fetchRemoveCards } from "../../../redux/slices/cards";
 import { handleLocalstorageRemove } from "../../utils/utils";
-
+import { useSound } from "../../utils/useSound";
 
 const SingleCard = ({ item, hoverFunc }) => {
   const dispatch = useDispatch();
+  const playSoundClick = useSound("/audio/click-sound.mp3", 0.4);
+  const playSoundHover = useSound("/audio/hover-small.wav", 0.4);
+  const playSoundDelete = useSound("/audio/delete-sound.wav", 0.3)
+  const playSoundWarning = useSound("/audio/scout-message.wav", 0.3);
 
   let stateIndicatorColor = "#EDA35A";
   if (item.state) {
@@ -53,7 +57,7 @@ const SingleCard = ({ item, hoverFunc }) => {
             </li>
           ));
         }
-        return null; // или можно вернуть пустой массив: []
+        return null;
       })}
     </ul>
   ) : (
@@ -63,17 +67,44 @@ const SingleCard = ({ item, hoverFunc }) => {
   const tabList = [
     {
       key: "description",
-      label: "Description",
+      label: (
+        <p
+          onMouseEnter={() => playSoundHover()}
+          onClick={() => {
+            playSoundClick();
+          }}
+        >
+          Description
+        </p>
+      ),
       children: <span className={styles.tabDeadl}>{item.description}</span>,
     },
     {
       key: "todos",
-      label: "Todos",
+      label: (
+        <p
+          onMouseEnter={() => playSoundHover()}
+          onClick={() => {
+            playSoundClick();
+          }}
+        >
+          Todos
+        </p>
+      ),
       children: todoList,
     },
     {
       key: "deadline",
-      label: "Deadline",
+      label: (
+        <p
+          onMouseEnter={() => playSoundHover()}
+          onClick={() => {
+            playSoundClick();
+          }}
+        >
+          Deadline
+        </p>
+      ),
       children: (
         <span className={styles.tabDeadl}>
           {" "}
@@ -99,10 +130,12 @@ const SingleCard = ({ item, hoverFunc }) => {
   };
 
   const onClickRemove = () => {
+    playSoundWarning();
     if (window.confirm("Are you sure you want to delete the card?")) {
       console.log(item._id);
       dispatch(fetchRemoveCards(item._id));
-      handleLocalstorageRemove(item._id)
+      handleLocalstorageRemove(item._id);
+      playSoundDelete()
     }
   };
 
@@ -116,7 +149,9 @@ const SingleCard = ({ item, hoverFunc }) => {
           <GoCheckCircle
             className={styles.icon}
             style={{ color: "#20b1a9" }}
+            onMouseEnter={() => playSoundHover()}
             onClick={() => {
+              playSoundClick();
               handleStatusColor("#20b1a9");
               handleStatus("isApproved");
             }}
@@ -134,7 +169,9 @@ const SingleCard = ({ item, hoverFunc }) => {
           <GoCircle
             className={styles.icon}
             style={{ color: "#EDA35A" }}
+            onMouseEnter={() => playSoundHover()}
             onClick={() => {
+              playSoundClick();
               handleStatus("isAwaiting");
               handleStatusColor("#EDA35A");
             }}
@@ -153,7 +190,9 @@ const SingleCard = ({ item, hoverFunc }) => {
           <GoCircleSlash
             className={styles.icon}
             style={{ color: "#b32f55" }}
+            onMouseEnter={() => playSoundHover()}
             onClick={() => {
+              playSoundClick();
               handleStatusColor("#b32f55");
               handleStatus("isRejected");
             }}
@@ -191,7 +230,14 @@ const SingleCard = ({ item, hoverFunc }) => {
             style={{ backgroundColor: statusColor }}
           ></div>
           <Tooltip placement="leftTop" title={<span>Go to edit page</span>}>
-            <Link to={`/vacancy/${item._id}`} className={styles.icons}>
+            <Link
+              to={`/vacancy/${item._id}`}
+              className={styles.icons}
+              onClick={() => {
+                playSoundClick();
+              }}
+              onMouseEnter={() => playSoundHover()}
+            >
               {<EditOutlined />}
             </Link>
           </Tooltip>
@@ -222,6 +268,10 @@ const SingleCard = ({ item, hoverFunc }) => {
               <Tooltip placement="leftTop" title={<span>Setting status</span>}>
                 <SettingOutlined
                   className={styles.iconsBottom}
+                  onClick={() => {
+                    playSoundClick();
+                  }}
+                  onMouseEnter={() => playSoundHover()}
                   type="subMeny"
                 />
               </Tooltip>
@@ -231,6 +281,7 @@ const SingleCard = ({ item, hoverFunc }) => {
             <Tooltip placement="leftTop" title={<span>Delete</span>}>
               <DeleteOutlined
                 className={styles.iconsBottom}
+                onMouseEnter={() => playSoundHover()}
                 onClick={onClickRemove}
               />
             </Tooltip>

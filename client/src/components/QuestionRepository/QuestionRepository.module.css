@@ -1,5 +1,11 @@
+.formShowedButtons {
+  font-size: 36px;
+  font-weigh: 400;
+  color: #ddeaf6;
+}
+
 .deleteIcon {
-  font-size: 22px;
+  font-size: 26px;
 }
 
 .deleteIcon:hover {
@@ -12,9 +18,42 @@
 
 .iconsConteiner {
   display: flex;
+  align-items: center;
+  align-self: end;
   gap: 20px;
+}
+.questionConteiner {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
 }
 
 .rate {
   color: orange;
+}
+.question {
+  width: 95%;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+  text-transform: capitalize;
+}
+.question > h4 {
+  font-weight: 400;
+}
+
+.question::first-letter {
+  margin-left: 15px;
+}
+.text {
+  border-top: 1px solid #ddeaf6;
+  padding-top: 20px;
+  width: 95%;
+  color: #ddeaf6;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+  word-break: break-word;
+  text-transform: capitalize;
+}
+.text::first-letter {
+  margin-left: 15px;
 }

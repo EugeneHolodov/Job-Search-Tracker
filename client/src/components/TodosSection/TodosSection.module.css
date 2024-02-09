@@ -98,3 +98,9 @@
 .iconDone svg {
   fill: #20b1a9;
 }
+
+.todoFormConteiner {
+  display: flex;
+  align-items: flex-start;
+  gap: 35px;
+}

@@ -1,7 +1,6 @@
 import { useEffect, useState } from "react";
 import {
   GoStopwatch,
-  GoChecklist,
   GoLog,
   GoCircle,
   GoCheckCircle,
@@ -14,15 +13,11 @@ import TodosSection from "../TodosSection/TodosSection";
 import axios from "../../axios";
 import { Skeleton, ConfigProvider } from "antd";
 import styles from "./SingleVacancy.module.css";
-import { Button, Modal, Form, Input, DatePicker } from "antd";
-import {
-  PlusCircleOutlined,
-  PaperClipOutlined,
-  CheckCircleOutlined,
-  EditOutlined,
-} from "@ant-design/icons";
+import { Modal, Form, Input, DatePicker } from "antd";
+import { PaperClipOutlined, EditOutlined } from "@ant-design/icons";
 import { fetchUpdateCards } from "../../redux/slices/cards";
 import dayjs from "dayjs";
+import { useSound } from "../utils/useSound";
 
 export const SingleVacancy = () => {
   const [data, setData] = useState();
@@ -30,6 +25,9 @@ export const SingleVacancy = () => {
   const { id } = useParams();
   const [open, setOpen] = useState(false);
   const [confirmLoading, setConfirmLoading] = useState(false);
+  const playSoundClick = useSound("/audio/click-sound.mp3", 0.4);
+  const playSoundHover = useSound("/audio/hover-small.wav", 0.4);
+  const playSoundWarning = useSound("/audio/scout-message.wav", 0.3);
   const dispatch = useDispatch();
   const dateFormat = "YYYY/MM/DD";
 
@@ -43,7 +41,9 @@ export const SingleVacancy = () => {
       : currentDate();
 
   const onFinish = async (id, values) => {
+    playSoundWarning();
     if (window.confirm("Do you want to update the card?")) {
+     playSoundClick()
       const val = values.deadline
         ? {
             ...values,
@@ -102,11 +102,13 @@ export const SingleVacancy = () => {
   }
 
   const handleModalToModal = () => {
+   playSoundClick()
     setOpen(true);
   };
 
   const handleCancel = () => {
     console.log("Clicked cancel button");
+   playSoundClick()
     setOpen(false);
   };
 
@@ -151,7 +153,7 @@ export const SingleVacancy = () => {
                 fontSize: "16px",
               }}
             >
-             Data Creation Time:
+              Data Creation Time:
               <span
                 style={{
                   color: "#ff9f3e",
@@ -167,8 +169,6 @@ export const SingleVacancy = () => {
             style={{
               display: "flex",
               flexDirection: "column",
-              color: "#f5faff",
-              backgroundColor: "rgba(0, 0, 0, 0.45)",
               padding: "10px 25px",
               borderRadius: "20px",
             }}
@@ -197,7 +197,11 @@ export const SingleVacancy = () => {
           </p>
         </div>
 
-        <button className="mainButton" onClick={() => handleModalToModal()}>
+        <button
+          className="mainButton"
+          onClick={() => handleModalToModal()}
+          onMouseEnter={() => playSoundHover()}
+        >
           <EditOutlined className="iconButtons" />
           Edit Your Vacancy
         </button>

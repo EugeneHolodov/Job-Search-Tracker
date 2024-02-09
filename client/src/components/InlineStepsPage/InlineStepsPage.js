@@ -1,64 +1,196 @@
-import React from 'react';
-import { Avatar, List, Steps } from 'antd';
-const data = [
-  {
-    title: 'Ant Design Title 1',
-    current: 0,
-  },
-  {
-    title: 'Ant Design Title 2',
-    current: 1,
-    status: 'error',
-  },
-  {
-    title: 'Ant Design Title 3',
-    current: 2,
-  },
-  {
-    title: 'Ant Design Title 4',
-    current: 1,
-  },
-];
+import React from "react";
+import { useState, useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { Table, Tag, Steps } from "antd";
+import { fetchCards } from "../../redux/slices/cards";
+import { BarChartOutlined } from "@ant-design/icons";
 const items = [
   {
-    title: 'Step 1',
-    description: 'This is a Step 1.',
+    title: "Step 1",
+    description: "Applying for a vacancy.",
   },
   {
-    title: 'Step 2',
-    description: 'This is a Step 2.',
+    title: "Step 2",
+    description: "The reply is in process.",
   },
   {
-    title: 'Step 3',
-    description: 'This is a Step 3.',
+    title: "Step 3",
+    description: "Receiving feedback in case of refusal.",
+  },
+  {
+    title: "Step 4",
+    description: "You got the job.",
   },
 ];
-const InlineStepsPage = () => (
-  <div>
-    <List
-      itemLayout="horizontal"
-      dataSource={data}
-      renderItem={(item, index) => (
-        <List.Item>
-          <List.Item.Meta
-            avatar={
-              <Avatar src={`https://xsgames.co/randomusers/avatar.php?g=pixel&key=${index}`} />
-            }
-            title={<a href="https://ant.design">{item.title}</a>}
-            description="Ant Design, a design language for background applications, is refined by Ant UED Team"
-          />
+
+function calculateDeadlineDifference(deadlineString) {
+  const deadlineDate = new Date(deadlineString);
+  const currentDate = new Date();
+
+  const timeDifference = deadlineDate - currentDate;
+  const daysDifference = Math.ceil(timeDifference / (1000 * 60 * 60 * 24));
+
+  if (daysDifference === 0) {
+    return (
+      <Tag color="orange" key={1}>
+        IS TODAY
+      </Tag>
+    );
+  } else if (daysDifference < 0) {
+    return (
+      <Tag color="red" key={2}>
+        {`WAS ${Math.abs(daysDifference)} ${getPluralForm(
+          Math.abs(daysDifference),
+          "DAY",
+          "DAYS"
+        )} AGO`}
+      </Tag>
+    );
+  } else {
+    return (
+      <Tag color="green" key={3}>{`IN ${daysDifference} ${getPluralForm(
+        daysDifference,
+        "DAY",
+        "DAYS"
+      )}`}</Tag>
+    );
+  }
+}
+
+function getPluralForm(number, one, other) {
+  return number === 1 ? one : other;
+}
+
+const InlineStepsPage = () => {
+  const dispatch = useDispatch();
+  const cards = useSelector((state) => state.cards.cards.items);
+  const [direction, setDirection] = useState(
+    window.innerWidth < 900 ? "vertical" : "horizontal"
+  );
+
+  useEffect(() => {
+    const handleResize = () => {
+      setDirection(window.innerWidth < 900 ? "vertical" : "horizontal");
+    };
+
+    window.addEventListener("resize", handleResize);
+
+    return () => {
+      window.removeEventListener("resize", handleResize);
+    };
+  }, []);
+
+  useEffect(() => {
+    !cards.length && dispatch(fetchCards());
+  }, []);
+
+  const data = cards.map((card, index) => {
+    return {
+      key: index,
+      vacancy: card.title,
+      date: card.createdAt.slice(0, 10),
+      deadline: calculateDeadlineDifference(card.deadline),
+      status: card.state.slice(2),
+    };
+  });
+
+  const columns = [
+    {
+      title: "Vacancy",
+      dataIndex: "vacancy",
+      width: "10%",
+      key: "vacancy",
+    },
+    {
+      title: "Application Date",
+      dataIndex: "date",
+      width: "10%",
+      key: "date",
+    },
+    {
+      title: "Deadline",
+      dataIndex: "deadline",
+      width: "10%",
+      key: "deadline",
+    },
+    {
+      title: "Application Status",
+      key: "status",
+      width: "10%",
+      dataIndex: "status",
+      render: (_, { status }) => {
+        let color;
+        switch (status) {
+          case "Awaiting":
+            color = "orange";
+            break;
+          case "Approved":
+            color = "green";
+            break;
+          case "Rejected":
+            color = "red";
+            break;
+
+          default:
+            color = "gray";
+        }
+        return (
+          <Tag color={color} key={status}>
+            {status.toUpperCase()}
+          </Tag>
+        );
+      },
+    },
+    {
+      title: "Action",
+      key: "action",
+      width: "min-content",
+      render: (_, record) => {
+        let current;
+        switch (record.status) {
+          case "Awaiting":
+            current = 1;
+            break;
+          case "Approved":
+            current = 3;
+            break;
+          case "Rejected":
+            current = 2;
+            break;
+
+          default:
+            current = 0;
+        }
+        return (
           <Steps
-            style={{
-              marginTop: 8,
-            }}
-            type="inline"
-            current={item.current}
-            status={item.status}
+            progressDot
+            size="small"
+            current={current}
             items={items}
+            direction={direction}
           />
-        </List.Item>
-      )}
-    />
-  </div>
-);
+        );
+      },
+    },
+  ];
+
+  return (
+    <div className="bacgroundWraoer">
+      <h1 className="headerMain">
+        <BarChartOutlined className="infoIcon" />
+        Applications Statistics Overview
+      </h1>
+      <Table
+        style={{ borderRadius: "10px" }}
+        bordered={true}
+        columns={columns}
+        scroll={{
+          x: 800,
+        }}
+        dataSource={data}
+        pagination={false}
+      />
+    </div>
+  );
+};
 export default InlineStepsPage;

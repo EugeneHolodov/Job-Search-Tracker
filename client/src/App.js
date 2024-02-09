@@ -1,23 +1,19 @@
 import { Route, Routes } from "react-router-dom";
 import React, { useEffect, useState } from "react";
 import { Layout, Menu, ConfigProvider } from "antd";
-import { useDispatch, useSelector } from "react-redux";
-import { useParams, useLocation } from "react-router-dom";
+import { useDispatch } from "react-redux";
+import { useLocation } from "react-router-dom";
 import HeaderCustom from "./components/Header/Header";
 import { HomePage } from "./components/homePage/HomePage.js";
 import { Link } from "react-router-dom";
 import QuestionRepository from "./components/QuestionRepository/QuestionRepository.js";
-import TestTwo from "./components/Test2/Test2";
 import {
   HomeOutlined,
-  DesktopOutlined,
-  FileOutlined,
-  PieChartOutlined,
   InfoCircleOutlined,
-  UserOutlined,
+  BarChartOutlined,
+  OrderedListOutlined,
 } from "@ant-design/icons";
-import { GoStack, GoEyeClosed } from "react-icons/go";
-import { SiLinkedin } from "react-icons/si";
+import { GoStack } from "react-icons/go";
 import About from "./components/About/About.jsx";
 import Registration from "./components/Registration/Registration";
 import Login from "./components/Login/Login";
@@ -25,38 +21,88 @@ import SingleVacancy from "./components/SingleVacacy/SingleVacancy";
 import VacancyPage from "./components/VacancyPage/VacancyPage";
 import InlineStepsPage from "./components/InlineStepsPage/InlineStepsPage";
 import "./App.css";
-import { fetchAuthMe, selectIsAuth } from "./redux/slices/auth";
+import { fetchAuthMe } from "./redux/slices/auth";
+import { useSound } from "./components/utils/useSound.js";
 
-const { Header, Content, Footer, Sider } = Layout;
-function getItem(label, key, icon, children) {
-  return {
-    key,
-    icon,
-    children,
-    label,
-  };
-}
-
-const items = [
-  getItem(<Link to="/">Home</Link>, "/", <HomeOutlined />),
-  getItem(<Link to="/vacancy">Vacancy List</Link>, "/vacancy", <GoStack />),
-  //getItem(<Link to="/inline">Table</Link>, "/inline", <FileOutlined />),
-  getItem(<Link to="/about">About</Link>, "/about", <InfoCircleOutlined />),
-  getItem(<Link to="/test2">Todos</Link>, "/test2", <PieChartOutlined />),
-  getItem(
-    <Link to="/question">Question Repository</Link>,
-    "/question",
-    <FileOutlined />
-  ),
-];
 const App = () => {
   const dispatch = useDispatch();
+  const playSoundClick = useSound("/audio/click-sound.mp3", 0.4);
+  const playSoundHover = useSound("/audio/hover-small.wav", 0.4);
+
   const { pathname } = useLocation();
-  const isAuth = useSelector(selectIsAuth);
-console.log("pathname", pathname);
+  console.log("pathname", pathname);
+
   useEffect(() => {
     dispatch(fetchAuthMe());
   }, []);
+
+  const { Header, Content, Footer, Sider } = Layout;
+  function getItem(label, key, icon, children) {
+    return {
+      key,
+      icon,
+      children,
+      label,
+    };
+  }
+
+  const items = [
+    getItem(
+      <Link
+        to="/"
+        onMouseEnter={() => playSoundHover()}
+        onClick={() => playSoundClick()}
+      >
+        Home
+      </Link>,
+      "/",
+      <HomeOutlined />
+    ),
+    getItem(
+      <Link
+        to="/vacancy"
+        onMouseEnter={() => playSoundHover()}
+        onClick={() => playSoundClick()}
+      >
+        Vacancy List
+      </Link>,
+      "/vacancy",
+      <GoStack />
+    ),
+    getItem(
+      <Link
+        to="/statistic"
+        onMouseEnter={() => playSoundHover()}
+        onClick={() => playSoundClick()}
+      >
+        Statistic
+      </Link>,
+      "/statistic",
+      <BarChartOutlined />
+    ),
+    getItem(
+      <Link
+        to="/question"
+        onMouseEnter={() => playSoundHover()}
+        onClick={() => playSoundClick()}
+      >
+        Questions
+      </Link>,
+      "/question",
+      <OrderedListOutlined />
+    ),
+    getItem(
+      <Link
+        to="/about"
+        onMouseEnter={() => playSoundHover()}
+        onClick={() => playSoundClick()}
+      >
+        About
+      </Link>,
+      "/about",
+      <InfoCircleOutlined />
+    ),
+  ];
 
   const [collapsed, setCollapsed] = useState(false);
 
@@ -88,7 +134,6 @@ console.log("pathname", pathname);
             iconMarginInlineEnd: 15,
             iconSize: 22,
           },
-          
         },
       }}
     >
@@ -101,7 +146,10 @@ console.log("pathname", pathname);
           theme="dark"
           collapsible
           collapsed={collapsed}
-          onCollapse={(value) => setCollapsed(value)}
+          onCollapse={(value) => {
+            playSoundClick();
+            setCollapsed(value);
+          }}
         >
           <div className="demo-logo-vertical">
             <img
@@ -113,7 +161,7 @@ console.log("pathname", pathname);
 
           <Menu
             theme="dark"
-            selectedKeys={[pathname]}        
+            selectedKeys={[pathname]}
             mode="inline"
             items={items}
           />
@@ -137,15 +185,18 @@ console.log("pathname", pathname);
               <Route path={"/todos"} element={<VacancyPage />} />
               <Route path={"/login"} element={<Login />} />
               <Route path={"/registration"} element={<Registration />} />
-              <Route path={"/inline"} element={<InlineStepsPage />} />
+              <Route path={"/statistic"} element={<InlineStepsPage />} />
               <Route path={"/question"} element={<QuestionRepository />} />
-              <Route path={"/test2"} element={<TestTwo />} />
             </Routes>
           </Content>
           <Footer className="footerConteiner">
             <span>The Ultimate Resource for Your Job Search *2023</span>
             <div className="footerLinkConteiner">
-              <Link to="https://no.linkedin.com/">
+              <Link
+                to="https://no.linkedin.com/"
+                onMouseEnter={() => playSoundHover()}
+                onClick={() => playSoundClick()}
+              >
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
                   viewBox="0 0 24 24"
@@ -157,7 +208,11 @@ console.log("pathname", pathname);
                   <path d="M20.5 2h-17A1.5 1.5 0 002 3.5v17A1.5 1.5 0 003.5 22h17a1.5 1.5 0 001.5-1.5v-17A1.5 1.5 0 0020.5 2zM8 19H5v-9h3zM6.5 8.25A1.75 1.75 0 118.3 6.5a1.78 1.78 0 01-1.8 1.75zM19 19h-3v-4.74c0-1.42-.6-1.93-1.38-1.93A1.74 1.74 0 0013 14.19a.66.66 0 000 .14V19h-3v-9h2.9v1.3a3.11 3.11 0 012.7-1.4c1.55 0 3.36.86 3.36 3.66z"></path>
                 </svg>
               </Link>
-              <Link to="https://www.finn.no/job/browse.html">
+              <Link
+                to="https://www.finn.no/job/browse.html"
+                onMouseEnter={() => playSoundHover()}
+                onClick={() => playSoundClick()}
+              >
                 <svg
                   focusable="false"
                   width="62"
@@ -183,7 +238,11 @@ console.log("pathname", pathname);
                   ></path>
                 </svg>
               </Link>
-              <Link to="https://www.nav.no">
+              <Link
+                to="https://www.nav.no"
+                onMouseEnter={() => playSoundHover()}
+                onClick={() => playSoundClick()}
+              >
                 <img
                   src="https://www.nav.no/dekoratoren/media/nav-logo-red.svg?ts=1"
                   alt="Til forsiden"

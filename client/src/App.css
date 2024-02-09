@@ -8,6 +8,12 @@ h2 {
   color: #000;
 }
 
+.headerMain {
+  display: flex;
+  align-items: center;
+  margin-bottom: 30px;
+  gap: 5px;
+}
 
 .demo-logo-vertical {
   height: 52px;
@@ -43,7 +49,7 @@ h2 {
   background-size: contain;
   background-position: center;
   background-repeat: no-repeat;
-  max-width: 1140px;
+  max-width: 1170px;
   margin: 0 auto;
   padding: 0 10px;
 }
@@ -60,14 +66,15 @@ h2 {
   padding: 10px 17px;
   color: #000;
   font-size: 18px;
-  transition: transform 0.3s ease-in-out;
+  transition: transform 0.1s ease-in-out;
+  font-weight: 300;
 }
 
 .mainButton:hover {
   background-color: #2b558c;
   color: #f5faff;
   border-color: transparent;
-  font-weight: 300;
+  
 }
 
 .loginForm {
@@ -124,4 +131,14 @@ h2 {
 
 .registrAgrrLink:hover {
   color: #c75c10;
+}
+
+.form-showed-buttons {
+  font-size: 36px;
+  font-weigh: 400;
+  color: #ddeaf6;
+}
+
+.form-showed-buttons:hover {
+  color: #ff9f3e;
 }

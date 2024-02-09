@@ -6,16 +6,11 @@ import { Row, Col, Modal, Dropdown } from "antd";
 import SingleCard from "./SingleCard/SingleCard";
 import styles from "./CardSection.module.css";
 import SkeletonCard from "./SkeletonCard/SkeletonCard";
-import {
-  fetchCards,
-  fetchUpdateCards,
-  fetchUpdateAllCards,
-} from "../../redux/slices/cards";
+import { fetchCards, fetchUpdateAllCards } from "../../redux/slices/cards";
 import { GoStack, GoEyeClosed } from "react-icons/go";
 import CreateCardForm from "../CreateCardForm/CreateCardForm";
 import { selectIsAuth } from "../../redux/slices/auth";
-import { InfoCircleOutlined } from "@ant-design/icons";
-import { Howl } from "howler";
+import { useSound } from "../utils/useSound.js";
 
 const CardSection = () => {
   const userData = useSelector((state) => state.auth.data);
@@ -25,7 +20,11 @@ const CardSection = () => {
   const isCardsLoading = cards.status === "loading";
   const isAuth = useSelector(selectIsAuth);
   const navigate = useNavigate();
-  const [initialStatuses, setInitialStatuses] = useState([]);
+  const playSoundClick = useSound("/audio/click-sound.mp3", 0.4);
+  const playSoundHover = useSound("/audio/hover-small.wav", 0.4);
+  const playSoundHoverCard = useSound("/audio/hover-sound.wav", 0.2);
+  const playSoundHoverTap = useSound("/audio/tap-sound.wav", 0.4);
+  const playSoundWarning = useSound("/audio/scout-message.wav", 0.3);
   const [open, setOpen] = useState(false);
   const [confirmLoading, setConfirmLoading] = useState(false);
   const currentCardsRef = React.useRef(cards);
@@ -36,7 +35,7 @@ const CardSection = () => {
   React.useEffect(() => {
     if (!isAuth) {
       setCardForStatusRend([]);
-      console.log('this',cardForStatusRend);
+      console.log("this", cardForStatusRend);
     }
   }, [isAuth]);
 
@@ -71,7 +70,6 @@ const CardSection = () => {
       );
     }
 
-
     const handleUnload = async () => {
       console.log("Lemon");
       if (initialStatusArr && currentCardsRef.current) {
@@ -92,7 +90,6 @@ const CardSection = () => {
         };
 
         try {
-          
           console.log(
             "Compear",
             arrayEquals(initialStatusArr, initialStatusArrSecond)
@@ -123,15 +120,6 @@ const CardSection = () => {
     console.log("currentCardsRef.current", currentCardsRef.current);
   }, [cards]);
 
-  const soundHoverCard = new Howl({
-    src: ["/audio/hover-sound.wav"],
-    volume: 0.3,
-  });
-
-  const playSound = () => {
-    soundHoverCard.play();
-  };
-
   const cardsForRender = cards.items.filter((item) => {
     if (item.user && userData) {
       return item.user._id === userData._id;
@@ -143,6 +131,7 @@ const CardSection = () => {
   console.log("Cards", cards);
 
   const handleSorted = (valState) => {
+    playSoundClick();
     const cardsForRender = cards.items.filter(
       (item) => item.state === valState
     );
@@ -151,8 +140,10 @@ const CardSection = () => {
 
   const handleModalToModal = () => {
     if (isAuth) {
+      playSoundClick();
       setOpen(true);
     } else {
+      playSoundWarning()
       alert("You have to login first");
 
       navigate("/login");
@@ -167,21 +158,50 @@ const CardSection = () => {
   const items = [
     {
       label: (
-        <p onClick={() => setCardForStatusRend(cardsForRender)}>All vacancy</p>
+        <p
+          onClick={() => {
+            setCardForStatusRend(cardsForRender);
+            playSoundClick();
+          }}
+          onMouseEnter={() => playSoundHover()}
+        >
+          All vacancy
+        </p>
       ),
       key: "All",
     },
     {
-      label: <p onClick={() => handleSorted("isAwaiting")}>Awaiting</p>,
+      label: (
+        <p
+          onClick={() => handleSorted("isAwaiting")}
+          onMouseEnter={() => playSoundHover()}
+        >
+          Awaiting
+        </p>
+      ),
       key: "isAwaiting",
     },
     {
-      label: <p onClick={() => handleSorted("isApproved")}>Approved</p>,
+      label: (
+        <p
+          onClick={() => handleSorted("isApproved")}
+          onMouseEnter={() => playSoundHover()}
+        >
+          Approved
+        </p>
+      ),
 
       key: "isApproved",
     },
     {
-      label: <p onClick={() => handleSorted("isRejected")}>Rejected</p>,
+      label: (
+        <p
+          onClick={() => handleSorted("isRejected")}
+          onMouseEnter={() => playSoundHover()}
+        >
+          Rejected
+        </p>
+      ),
 
       key: "isRejected",
     },
@@ -190,7 +210,7 @@ const CardSection = () => {
   return (
     <div className={styles.conteiner}>
       <div className={styles.header}>
-        <h1>
+        <h1 className="headerMain">
           <GoStack className="infoIcon" />
           Your Applied Vacancy Cards
         </h1>
@@ -201,13 +221,17 @@ const CardSection = () => {
             }}
             arrow={false}
             trigger={["hover"]}
-            placement="bottomLeft"
+            placement="left"
             className={styles.dropdown}
           >
             {isCardsLoading && cardForStatusRend.length ? (
               <></>
             ) : (
-              <button className={styles.sertButton} type="subMeny">
+              <button
+                className={styles.sertButton}
+                type="subMeny"
+                onMouseEnter={() => playSoundHoverTap()}
+              >
                 Sort Cards By
                 <GoEyeClosed className={styles.iconSertButton} />
               </button>
@@ -223,7 +247,7 @@ const CardSection = () => {
           { xs: 8, sm: 16, md: 24 },
           { xs: 8, sm: 16, md: 24 },
         ]}
-        justify={{ ["md"]: "center", ["lg"]: "start" }}
+        justify={{ md: "center", lg: "start" }}
         className={styles.margBott}
       >
         {console.log("That I rendered", cardForStatusRend)}
@@ -235,7 +259,11 @@ const CardSection = () => {
             <SkeletonCard key={index} />
           ) : (
             <Col>
-              <SingleCard key={item._id} item={item} hoverFunc={playSound} />
+              <SingleCard
+                key={item._id}
+                item={item}
+                hoverFunc={() => playSoundHoverCard()}
+              />
             </Col>
           )
         )}
@@ -244,6 +272,7 @@ const CardSection = () => {
       <button
         className="mainButton"
         styles={{ marginTop: "30px" }}
+        onMouseEnter={() => playSoundHover()}
         onClick={() => handleModalToModal()}
       >
         <PlusCircleOutlined className="iconButtons" />

@@ -5,6 +5,7 @@ import {
   PaperClipOutlined,
   DownOutlined,
   PlusCircleOutlined,
+  MinusCircleOutlined,
 } from "@ant-design/icons";
 import { GoTasklist, GoChecklist } from "react-icons/go";
 
@@ -14,12 +15,18 @@ import { useDispatch, useSelector } from "react-redux";
 import { v4 as uuidv4 } from "uuid";
 import styles from "./TodosSection.module.css";
 import { fetchUpdateCards, setUpdateTodo } from "../../redux/slices/cards";
+import { useSound } from "../utils/useSound";
 
 function TodosSection({ dataInit }) {
   const [stores, setStores] = useState(dataInit.todos);
+  const [isFormShowed, setIsFormShowed] = useState(false);
   const { id } = useParams();
   const dispatch = useDispatch();
   const currentCardsRef = useRef(dataInit);
+  const [form] = Form.useForm();
+  const playSoundClick = useSound("/audio/click-sound.mp3", 0.4);
+  const playSoundHover = useSound("/audio/hover-small.wav", 0.4);
+  const playSoundWarning = useSound("/audio/scout-message.wav", 0.3);
 
   useEffect(() => {
     currentCardsRef.current = dataInit;
@@ -67,8 +74,7 @@ function TodosSection({ dataInit }) {
     if (action === "add") {
       existingData[id] = dataStor;
     } else if (action === "removeOne") {
-      if(existingData[id]) {
-
+      if (existingData[id]) {
         existingData[id] = existingData[id].map((group) => {
           if (group.items) {
             group.items = group.items.filter((item) => item.id !== idForRemove);
@@ -76,7 +82,7 @@ function TodosSection({ dataInit }) {
           return group;
         });
       } else {
-        return dataStor
+        return dataStor;
       }
     }
 
@@ -143,15 +149,31 @@ function TodosSection({ dataInit }) {
   };
 
   const handleOnFinish = (value) => {
-    const newData = [{ items: [...(stores[0]?.items || [])] }];
+    if (value.todo) {
+      playSoundClick();
+      const newData = [{ items: [...(stores[0]?.items || [])] }];
 
-    // Создаем новый объект с копией массива items и добавляем новый элемент
-    const newItems = [...newData[0].items, { id: uuidv4(), name: value.todo }];
+      // Создаем новый объект с копией массива items и добавляем новый элемент
+      const newItems = [
+        ...newData[0].items,
+        { id: uuidv4(), name: value.todo },
+      ];
 
-    const data = [...stores];
-    const dataFinal = [{ ...data[0], items: newItems }, data[1]];
+      const data = [...stores];
+      const dataFinal = [{ ...data[0], items: newItems }, data[1]];
 
-    setStores(handleLocalstorageChange(dataFinal, "add"));
+      setStores(handleLocalstorageChange(dataFinal, "add"));
+      form.resetFields();
+      setIsFormShowed(false);
+    } else {
+      playSoundWarning()
+      window.alert("You have to fill input");
+    }
+  };
+
+  const togleFormShowed = () => {
+    playSoundClick();
+    setIsFormShowed(!isFormShowed);
   };
 
   const handleRemoveItem = (itemId) => {
@@ -223,36 +245,55 @@ function TodosSection({ dataInit }) {
 
   return (
     <div className={styles.section}>
-      <h1 className={styles.headerEdit}>
-          <GoChecklist className="infoIcon" />
-          The To-Do Section
-        </h1>
-      <Form
-        onFinish={(val) => handleOnFinish(val)}
-        style={{
-          maxWidth: 600,
-        }}
-      >
-        <h2 className={styles.todoHeader}>
-          <GoTasklist />
-          Create a New To-Do
-        </h2>
-        <div className={styles.conteinForForm}>
-          <Form.Item name="todo">
-            <Input.TextArea autoSize={true} size="large" />
-          </Form.Item>
-          <Form.Item>
-            <button
-              className={styles.todoButton}
-              type="primary"
-              htmlType="submit"
-            >
-              <PlusCircleOutlined style={{ marginRight: "5px" }} />
-              Add
-            </button>
-          </Form.Item>
-        </div>
-      </Form>
+      <h1 className="headerMain">
+        <GoChecklist className="infoIcon" />
+        The To-Do Section
+      </h1>
+      <div className={styles.todoFormConteiner}>
+        {isFormShowed ? (
+          <MinusCircleOutlined
+            className="form-showed-buttons"
+            style={{ marginBottom: "30px" }}
+            onClick={() => togleFormShowed()}
+          />
+        ) : (
+          <PlusCircleOutlined
+            className="form-showed-buttons"
+            style={{ marginBottom: "30px" }}
+            onClick={() => togleFormShowed()}
+          />
+        )}
+        {isFormShowed && (
+          <Form
+            form={form}
+            onFinish={(val) => handleOnFinish(val)}
+            style={{
+              maxWidth: 600,
+            }}
+          >
+            <h2 className={styles.todoHeader}>
+              <GoTasklist />
+              Create a New To-Do
+            </h2>
+            <div className={styles.conteinForForm}>
+              <Form.Item name="todo">
+                <Input.TextArea autoSize={true} size="large" />
+              </Form.Item>
+              <Form.Item>
+                <button
+                  className={styles.todoButton}
+                  type="primary"
+                  htmlType="submit"
+                  onMouseEnter={() => playSoundHover()}
+                >
+                  <PlusCircleOutlined style={{ marginRight: "5px" }} />
+                  Add
+                </button>
+              </Form.Item>
+            </div>
+          </Form>
+        )}
+      </div>
       <DragDropContext onDragEnd={handleDragAndDrop}>
         <Droppable droppableId="ROOT" type="group">
           {(provided) => (

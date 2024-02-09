@@ -1,12 +1,5 @@
 import styles from "./About.module.css";
-import {
-  PaperClipOutlined,
-  MessageOutlined,
-  InfoCircleOutlined,
-  FireOutlined,
-  RiseOutlined,
-  LeftOutlined,
-} from "@ant-design/icons";
+import { PaperClipOutlined, InfoCircleOutlined } from "@ant-design/icons";
 
 const About = () => {
   return (
@@ -16,7 +9,7 @@ const About = () => {
         backgroundImage: `url(${process.env.PUBLIC_URL}/images/life_style_working_11.svg)`,
       }}
     >
-      <h1 style={{marginBottom: '30px'}}>
+      <h1 className="headerMain">
         <span>
           <InfoCircleOutlined className="infoIcon" />
         </span>

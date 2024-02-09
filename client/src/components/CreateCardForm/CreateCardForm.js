@@ -1,15 +1,19 @@
 import React, { useState } from "react";
-import { Button, Form, Input, DatePicker } from "antd";
+import { Form, Input, DatePicker } from "antd";
 import axios from "../../axios";
 import { useNavigate } from "react-router-dom";
 import { setAddCard } from "../../redux/slices/cards";
 import { useDispatch, useSelector } from "react-redux";
 import { PlusCircleOutlined } from "@ant-design/icons";
+import { useSound } from "../utils/useSound";
 
 const CreateCardForm = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const userData = useSelector((state) => state.auth.data);
+  const playSoundClick = useSound("/audio/click-sound.mp3", 0.4);
+  const playSoundHover = useSound("/audio/hover-small.wav", 0.4);
+  const playSoundWarning = useSound("/audio/scout-message.wav", 0.3);
   const [loading, setLoading] = useState(false);
   const layout = {
     labelCol: {
@@ -41,8 +45,11 @@ const CreateCardForm = () => {
       const { data } = await axios.post("/cards", values);
       dispatch(setAddCard({ data, userData }));
       const id = data._id;
+      playSoundClick();
       navigate(`/vacancy/${id}`);
     } catch (error) {
+      playSoundWarning();
+
       console.warn("Fail to create card");
     }
   };
@@ -64,15 +71,31 @@ const CreateCardForm = () => {
             required: true,
           },
         ]}
+        onClick={() => {
+          playSoundClick();
+        }}
       >
         <Input />
       </Form.Item>
 
-      <Form.Item name="deadline" label="Deadline" {...validateMessages}>
+      <Form.Item
+        name="deadline"
+        label="Deadline"
+        {...validateMessages}
+        onClick={() => {
+          playSoundClick();
+        }}
+      >
         <DatePicker />
       </Form.Item>
 
-      <Form.Item name="description" label="Vacancy Description">
+      <Form.Item
+        name="description"
+        label="Vacancy Description"
+        onClick={() => {
+          playSoundClick();
+        }}
+      >
         <Input.TextArea />
       </Form.Item>
 
@@ -82,7 +105,11 @@ const CreateCardForm = () => {
           offset: 19,
         }}
       >
-        <button className="secandaryButton" htmlType="submit">
+        <button
+          className="secandaryButton"
+          htmlType="submit"
+          onMouseEnter={() => playSoundHover()}
+        >
           <PlusCircleOutlined />
           Create
         </button>
