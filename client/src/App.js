@@ -134,6 +134,13 @@ const App = () => {
             iconMarginInlineEnd: 15,
             iconSize: 22,
           },
+          Modal: {
+            titleLineHeight: 3.5,
+            titleFontSize: 22,
+            titleColor: "black",
+            contentBg: "#ebecf0",
+            headerBg: "#ebecf0",
+          },
         },
       }}
     >

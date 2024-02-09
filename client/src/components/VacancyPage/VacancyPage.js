@@ -7,17 +7,8 @@ const VacancyPage = () => {
     <ConfigProvider
       theme={{
         components: {
-          Button: {
-            defaultGhostColor: "#303C6C",
-            defaultGhostBorderColor: "#303C6C",
-          },
-          Modal: {
-            titleLineHeight: 3.5,
-            titleFontSize: 22,
-            titleColor: "black",
-            contentBg: "#ebecf0",
-            headerBg: "#ebecf0",
-          },
+          
+          
         },
       }}
     >
