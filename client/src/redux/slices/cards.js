@@ -90,16 +90,6 @@ const cardsSlice = createSlice({
     setCleaneState(state) {
       state.cards.items = []
     },
-    setUpdateCardState(state, action) {
-      const _id = action.payload.id;
-      state.cards.items.map((obj) => {
-        if (obj._id === _id) {
-          obj.state = action.payload.data;
-        }
-      });
-
-      state.cards.status = "loaded";
-    },
   },
   extraReducers: {
     //get cards
@@ -123,9 +113,7 @@ const cardsSlice = createSlice({
       );
     },
     //updete crard by id
-    [fetchUpdateCards.pending]: (state, action) => {
-      state.cards.status = "loading";
-    },
+    
     [fetchUpdateCards.fulfilled]: (state, action) => {
       console.log("Данные из сервера", action.payload);
       const _id = action.payload._id;

@@ -1,12 +1,12 @@
-import { useState, useRef, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { PlusCircleOutlined } from "@ant-design/icons";
 import { useDispatch, useSelector } from "react-redux";
-import { useNavigate, useLocation } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { Row, Col, Modal, Dropdown } from "antd";
 import SingleCard from "./SingleCard/SingleCard";
 import styles from "./CardSection.module.css";
 import SkeletonCard from "./SkeletonCard/SkeletonCard";
-import { fetchCards, fetchUpdateAllCards } from "../../redux/slices/cards";
+import { fetchCards } from "../../redux/slices/cards";
 import { GoStack, GoEyeClosed } from "react-icons/go";
 import CreateCardForm from "../CreateCardForm/CreateCardForm";
 import { selectIsAuth } from "../../redux/slices/auth";
@@ -27,14 +27,12 @@ const CardSection = () => {
   const [cardForRend, setCardForRend] = useState([]);
 
   useEffect(() => {
-    console.log("Effect is working");
     !cards.items.length && dispatch(fetchCards());
   }, []);
 
   useEffect(() => {
-    console.log("Effect render is working");
     setCardForRend(cards.items);
-  }, [cards]);
+  }, [cards.items.length]);
 
   const handleSorted = (valState) => {
     playSoundClick();
@@ -55,7 +53,7 @@ const CardSection = () => {
     }
   };
 
-  const statusItems = [
+  const items = [
     {
       label: (
         <p
@@ -115,16 +113,14 @@ const CardSection = () => {
         {isAuth ? (
           <Dropdown
             menu={{
-              statusItems,
+              items,
             }}
             arrow={false}
             trigger={["hover"]}
             placement="left"
             className={styles.dropdown}
           >
-            {isCardsLoading && cardForRend.length ? (
-              <></>
-            ) : (
+            
               <button
                 className={styles.sertButton}
                 type="subMeny"
@@ -133,8 +129,8 @@ const CardSection = () => {
                 Sort Cards By
                 <GoEyeClosed className={styles.iconSertButton} />
               </button>
-            )}
           </Dropdown>
+            
         ) : (
           <></>
         )}
@@ -153,7 +149,7 @@ const CardSection = () => {
             isCardsLoading ? (
               <SkeletonCard key={index} />
             ) : (
-              <Col>
+              <Col key={index}>
                 <SingleCard
                   key={item._id}
                   item={item}
@@ -187,76 +183,3 @@ const CardSection = () => {
 };
 
 export default CardSection;
-
-// let initialStatusArr;
-//     // Функция для обновления состояния карточек
-//     const updateCardStatus = (data) => {
-//       setCardForStatusRend(
-//         data.filter((item) => item.user && item.user._id === userData?._id)
-//       );
-//     };
-
-//     const fetchData = async () => {
-//       const data = await dispatch(fetchCards());
-//       if (data.payload) {
-//         initialStatusArr = data.payload.map((element) => element.state);
-//         console.log("2", initialStatusArr);
-//         updateCardStatus(data.payload);
-//       }
-//       console.log("1", data);
-//     };
-
-//     if (!cards.items.length) {
-//       console.log("I get data from", cards.items);
-//       fetchData();
-//     } else {
-//       initialStatusArr = cards.items.map((element) => element.state);
-//       setCardForStatusRend(
-//         cards.items.filter(
-//           (item) => item.user && item.user._id === userData?._id
-//         )
-//       );
-//     }
-
-//     const handleUnload = async () => {
-//       console.log("Lemon");
-//       if (initialStatusArr && currentCardsRef.current) {
-//         const initialStatusArrSecond = currentCardsRef.current.items.map(
-//           (element) => element.state
-//         );
-//         const arrayEquals = (initialStatusArr, initialStatusArrSecond) => {
-//           if (initialStatusArr.length !== initialStatusArrSecond.length) {
-//             return false;
-//           }
-//           if (
-//             JSON.stringify(initialStatusArr) !==
-//             JSON.stringify(initialStatusArrSecond)
-//           ) {
-//             return false;
-//           }
-//           return true;
-//         };
-
-//         try {
-//           console.log(
-//             "Compear",
-//             arrayEquals(initialStatusArr, initialStatusArrSecond)
-//           );
-//           if (!arrayEquals(initialStatusArr, initialStatusArrSecond))
-//             await dispatch(fetchUpdateAllCards(currentCardsRef.current));
-//         } catch (error) {
-//           console.error("Failed to update data on the server:", error);
-//         }
-//       }
-//     };
-
-//     const unlisten = () => {
-//       handleUnload();
-//     };
-
-//     window.addEventListener("beforeunload", handleUnload);
-
-//     return () => {
-//       window.removeEventListener("beforeunload", handleUnload);
-//       unlisten();
-//     };

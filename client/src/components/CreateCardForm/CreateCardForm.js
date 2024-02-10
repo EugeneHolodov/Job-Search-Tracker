@@ -36,16 +36,18 @@ const CreateCardForm = () => {
   };
 
   const onFinish = async (fieldsValue) => {
+    setLoading(true);
     const values = {
       ...fieldsValue,
       deadline: fieldsValue["deadline"].format("YYYY-MM-DD"),
     };
     try {
-      setLoading(true);
+      
       const { data } = await axios.post("/cards", values);
       dispatch(setAddCard({ data, userData }));
       const id = data._id;
-      playSoundClick();
+      playSoundClick(); 
+      setLoading(false);
       navigate(`/vacancy/${id}`);
     } catch (error) {
       playSoundWarning();
@@ -108,6 +110,7 @@ const CreateCardForm = () => {
         <button
           className="secandaryButton"
           htmlType="submit"
+          disabled={loading}
           onMouseEnter={() => playSoundHover()}
         >
           <PlusCircleOutlined />

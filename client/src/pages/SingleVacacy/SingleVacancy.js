@@ -8,16 +8,16 @@ import {
 } from "react-icons/go";
 import { useParams } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import { currentDate } from "../utils/curentData";
-import TodosSection from "../TodosSection/TodosSection";
+import { currentDate } from "../../components/utils/curentData";
+import TodosSection from "../../components/TodosSection/TodosSection";
 import axios from "../../axios";
-import { Skeleton, ConfigProvider } from "antd";
+import { Skeleton } from "antd";
 import styles from "./SingleVacancy.module.css";
 import { Modal, Form, Input, DatePicker } from "antd";
 import { PaperClipOutlined, EditOutlined } from "@ant-design/icons";
 import { fetchUpdateCards } from "../../redux/slices/cards";
 import dayjs from "dayjs";
-import { useSound } from "../utils/useSound";
+import { useSound } from "../../components/utils/useSound";
 
 export const SingleVacancy = () => {
   const [data, setData] = useState();
@@ -43,7 +43,7 @@ export const SingleVacancy = () => {
   const onFinish = async (id, values) => {
     playSoundWarning();
     if (window.confirm("Do you want to update the card?")) {
-     playSoundClick()
+      playSoundClick();
       const val = values.deadline
         ? {
             ...values,
@@ -102,27 +102,17 @@ export const SingleVacancy = () => {
   }
 
   const handleModalToModal = () => {
-   playSoundClick()
+    playSoundClick();
     setOpen(true);
   };
 
   const handleCancel = () => {
-    console.log("Clicked cancel button");
-   playSoundClick()
+    playSoundClick();
     setOpen(false);
   };
 
   return (
-    <ConfigProvider
-      theme={{
-        components: {
-          Modal: {
-            contentBg: "#ebecf0",
-            headerBg: "#ebecf0",
-          },
-        },
-      }}
-    >
+    <>
       <div
         className="bacgroundWraoer"
         style={{
@@ -142,7 +132,7 @@ export const SingleVacancy = () => {
                   case "isRejected":
                     return <GoCircleSlash style={{ fill: "#b32f55" }} />;
                   default:
-                    return null; // or some default value
+                    return null;
                 }
               })()}
               {data.title}
@@ -220,11 +210,24 @@ export const SingleVacancy = () => {
               maxWidth: 600,
             }}
           >
-            <Form.Item name="title" label="Company" initialValue={data.title}>
+            <Form.Item
+              name="title"
+              label="Company"
+              initialValue={data.title}
+              onClick={() => {
+                playSoundClick();
+              }}
+            >
               <Input />
             </Form.Item>
 
-            <Form.Item name="deadline" label="Deadline">
+            <Form.Item
+              name="deadline"
+              label="Deadline"
+              onClick={() => {
+                playSoundClick();
+              }}
+            >
               <DatePicker defaultValue={dayjs(data.deadline, dateFormat)} />
             </Form.Item>
 
@@ -232,6 +235,9 @@ export const SingleVacancy = () => {
               name="description"
               label="Vacancy description"
               initialValue={data.description}
+              onClick={() => {
+                playSoundClick();
+              }}
             >
               <Input.TextArea autoSize={true} />
             </Form.Item>
@@ -242,7 +248,14 @@ export const SingleVacancy = () => {
                 offset: 21,
               }}
             >
-              <button className={styles.secandaryButton} htmlType="submit">
+              <button
+                className={styles.secandaryButton}
+                htmlType="submit"
+                onClick={() => {
+                  playSoundClick();
+                }}
+                onMouseEnter={()=> playSoundHover()}
+              >
                 ...
                 <EditOutlined />
               </button>
@@ -259,7 +272,7 @@ export const SingleVacancy = () => {
       >
         <TodosSection dataInit={data} />
       </div>
-    </ConfigProvider>
+    </>
   );
 };
 

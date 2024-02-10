@@ -1,8 +1,8 @@
-import { ConfigProvider, Tabs, Dropdown, Tooltip, Empty } from "antd";
+import { Tabs, Dropdown, Tooltip, Empty } from "antd";
 import { Link } from "react-router-dom";
-import { useState } from "react";
-import { useDispatch } from "react-redux";
-import { setUpdateCardState } from "../../../redux/slices/cards";
+import { useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { fetchUpdateCards } from "../../../redux/slices/cards";
 import {
   GoStopwatch,
   GoCircle,
@@ -22,10 +22,12 @@ import { useSound } from "../../utils/useSound";
 
 const SingleCard = ({ item, hoverFunc }) => {
   const dispatch = useDispatch();
+  const { cards } = useSelector((state) => state.cards);
   const playSoundClick = useSound("/audio/click-sound.mp3", 0.4);
   const playSoundHover = useSound("/audio/hover-small.wav", 0.4);
-  const playSoundDelete = useSound("/audio/delete-sound.wav", 0.3)
+  const playSoundDelete = useSound("/audio/delete-sound.wav", 0.3);
   const playSoundWarning = useSound("/audio/scout-message.wav", 0.3);
+  const [statusColor, setStatusColor] = useState();
 
   let stateIndicatorColor = "#EDA35A";
   if (item.state) {
@@ -44,7 +46,11 @@ const SingleCard = ({ item, hoverFunc }) => {
         stateIndicatorColor = "#EDA35A";
     }
   }
-  const [statusColor, setStatusColor] = useState(stateIndicatorColor);
+  useEffect(() => {
+    setStatusColor(stateIndicatorColor);
+  }, [item.state, stateIndicatorColor]);
+
+  console.log("element tekushii", item);
 
   const todoList = item.todos[0].items.length ? (
     <ul className={styles.ulList}>
@@ -126,7 +132,13 @@ const SingleCard = ({ item, hoverFunc }) => {
   };
 
   const handleStatus = (status) => {
-    dispatch(setUpdateCardState({ id: item._id, data: status }));
+    const cardForUpdate = cards.items.find((card) => card._id === item._id);
+    dispatch(
+      fetchUpdateCards({
+        id: item._id,
+        values: { ...cardForUpdate, state: status },
+      })
+    );
   };
 
   const onClickRemove = () => {
@@ -135,7 +147,7 @@ const SingleCard = ({ item, hoverFunc }) => {
       console.log(item._id);
       dispatch(fetchRemoveCards(item._id));
       handleLocalstorageRemove(item._id);
-      playSoundDelete()
+      playSoundDelete();
     }
   };
 
@@ -205,23 +217,7 @@ const SingleCard = ({ item, hoverFunc }) => {
   ];
 
   return (
-    <ConfigProvider
-      theme={{
-        components: {
-          Tabs: {
-            itemColor: "#f5faff",
-            itemHoverColor: "#002140",
-            itemSelectedColor: "#002140",
-            inkBarColor: "#002140",
-            itemActiveColor: "#A8D0E6",
-          },
-          Menu: {
-            itemActiveBg: "red",
-            itemHoverBg: "green",
-          },
-        },
-      }}
-    >
+    
       <div className={styles.card} onMouseEnter={hoverFunc}>
         <div className={styles.header}>
           <h2 className={styles.title}>{item.title}</h2>
@@ -288,7 +284,6 @@ const SingleCard = ({ item, hoverFunc }) => {
           </div>
         </div>
       </div>
-    </ConfigProvider>
   );
 };
 

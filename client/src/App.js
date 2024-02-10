@@ -4,9 +4,9 @@ import { Layout, Menu, ConfigProvider } from "antd";
 import { useDispatch } from "react-redux";
 import { useLocation } from "react-router-dom";
 import HeaderCustom from "./components/Header/Header";
-import { HomePage } from "./components/homePage/HomePage.js";
+import { HomePage } from "./pages/Home/HomePage.js";
 import { Link } from "react-router-dom";
-import QuestionRepository from "./components/QuestionRepository/QuestionRepository.js";
+import QuestionRepository from "./pages/QuestionRepository/QuestionRepository.js";
 import {
   HomeOutlined,
   InfoCircleOutlined,
@@ -14,12 +14,13 @@ import {
   OrderedListOutlined,
 } from "@ant-design/icons";
 import { GoStack } from "react-icons/go";
-import About from "./components/About/About.jsx";
-import Registration from "./components/Registration/Registration";
-import Login from "./components/Login/Login";
-import SingleVacancy from "./components/SingleVacacy/SingleVacancy";
-import VacancyPage from "./components/VacancyPage/VacancyPage";
-import InlineStepsPage from "./components/InlineStepsPage/InlineStepsPage";
+import About from "./pages/About/About.jsx";
+import Registration from "./pages/Registration/Registration.js";
+import Login from "./pages/Login/Login.js";
+import NotFound from "./pages/NotFound/NotFound.jsx";
+import SingleVacancy from "./pages/SingleVacacy/SingleVacancy.js";
+import VacancyPage from "./pages/Vacancy/Vacancy";
+import Statistic from "./pages/Statistic/Statistic.js";
 import "./App.css";
 import { fetchAuthMe } from "./redux/slices/auth";
 import { useSound } from "./components/utils/useSound.js";
@@ -141,6 +142,13 @@ const App = () => {
             contentBg: "#ebecf0",
             headerBg: "#ebecf0",
           },
+          Tabs: {
+            itemColor: "#f5faff",
+            itemHoverColor: "#002140",
+            itemSelectedColor: "#002140",
+            inkBarColor: "#002140",
+            itemActiveColor: "#A8D0E6",
+          },
         },
       }}
     >
@@ -186,13 +194,14 @@ const App = () => {
           >
             <Routes>
               <Route path={"/"} element={<HomePage />}></Route>
+              <Route path={"*"} element={<NotFound />} />
               <Route path={"/about"} element={<About />} />
               <Route path={"/vacancy"} element={<VacancyPage />} />
               <Route path={"/vacancy/:id"} element={<SingleVacancy />} />
               <Route path={"/todos"} element={<VacancyPage />} />
               <Route path={"/login"} element={<Login />} />
               <Route path={"/registration"} element={<Registration />} />
-              <Route path={"/statistic"} element={<InlineStepsPage />} />
+              <Route path={"/statistic"} element={<Statistic />} />
               <Route path={"/question"} element={<QuestionRepository />} />
             </Routes>
           </Content>

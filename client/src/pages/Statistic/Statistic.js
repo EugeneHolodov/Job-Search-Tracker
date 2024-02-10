@@ -61,7 +61,7 @@ function getPluralForm(number, one, other) {
   return number === 1 ? one : other;
 }
 
-const InlineStepsPage = () => {
+const Statistic = () => {
   const dispatch = useDispatch();
   const cards = useSelector((state) => state.cards.cards.items);
   const [direction, setDirection] = useState(
@@ -193,4 +193,4 @@ const InlineStepsPage = () => {
     </div>
   );
 };
-export default InlineStepsPage;
+export default Statistic;
