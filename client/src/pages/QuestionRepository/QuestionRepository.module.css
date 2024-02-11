@@ -1,7 +1,16 @@
+.conteinForForm {
+  display: flex;
+  justify-content: space-around;
+  gap: 15px;
+}
+
 .formShowedButtons {
   font-size: 36px;
   font-weigh: 400;
   color: #ddeaf6;
+}
+.todoHeader {
+  margin-bottom: 5px;
 }
 
 .deleteIcon {
@@ -13,6 +22,10 @@
 }
 
 .icon:hover {
+  fill: orange;
+}
+
+.iconOpen {
   fill: orange;
 }
 
@@ -35,25 +48,33 @@
   width: 95%;
   word-wrap: break-word;
   overflow-wrap: break-word;
-  text-transform: capitalize;
+  font-weight: 300;
 }
-.question > h4 {
-  font-weight: 400;
+.question::first-letter {
+  text-transform: uppercase;
 }
 
-.question::first-letter {
-  margin-left: 15px;
-}
 .text {
+  margin: 0 auto;
   border-top: 1px solid #ddeaf6;
   padding-top: 20px;
-  width: 95%;
-  color: #ddeaf6;
+  width: 94%;
+  color: #fff;
+  font-weight: 300;
   word-wrap: break-word;
   overflow-wrap: break-word;
   word-break: break-word;
-  text-transform: capitalize;
 }
+
 .text::first-letter {
-  margin-left: 15px;
+  text-transform: uppercase;
+}
+
+@media screen and (max-width: 880px) {
+  .conteinForForm {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+  }
+  
 }

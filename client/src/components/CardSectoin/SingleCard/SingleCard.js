@@ -57,7 +57,7 @@ const SingleCard = ({ item, hoverFunc }) => {
       {item.todos.map((column, index) => {
         if (index === 0) {
           return column.items.map((todo) => (
-            <li key={todo.id}>
+            <li key={todo.id} style={{textTransform: "capitalize"}}>
               <PaperClipOutlined style={{ marginRight: "5px" }} />
               {todo.name}
             </li>

@@ -8,9 +8,10 @@ import styles from "./CardSection.module.css";
 import SkeletonCard from "./SkeletonCard/SkeletonCard";
 import { fetchCards } from "../../redux/slices/cards";
 import { GoStack, GoEyeClosed } from "react-icons/go";
-import CreateCardForm from "../CreateCardForm/CreateCardForm";
+import CardForm from "../CardForm/CardForm.js";
 import { selectIsAuth } from "../../redux/slices/auth";
 import { useSound } from "../utils/useSound.js";
+import Button from "../UI/Button/Button.js";
 
 const CardSection = () => {
   const { cards } = useSelector((state) => state.cards);
@@ -117,20 +118,18 @@ const CardSection = () => {
             }}
             arrow={false}
             trigger={["hover"]}
-            placement="left"
+            placement="right"
             className={styles.dropdown}
           >
-            
-              <button
-                className={styles.sertButton}
-                type="subMeny"
-                onMouseEnter={() => playSoundHoverTap()}
-              >
-                Sort Cards By
-                <GoEyeClosed className={styles.iconSertButton} />
-              </button>
+            <button
+              className={styles.sertButton}
+              type="subMeny"
+              onMouseEnter={() => playSoundHoverTap()}
+            >
+              Sort Cards By
+              <GoEyeClosed className={styles.iconSertButton} />
+            </button>
           </Dropdown>
-            
         ) : (
           <></>
         )}
@@ -142,7 +141,7 @@ const CardSection = () => {
           { xs: 8, sm: 16, md: 24 },
         ]}
         justify={{ md: "center", lg: "start" }}
-        className={styles.margBott}
+        className={isAuth && styles.margBott}
       >
         {(isCardsLoading ? [...Array(cardForRend.length)] : cardForRend).map(
           (item, index) =>
@@ -159,24 +158,17 @@ const CardSection = () => {
             )
         )}
       </Row>
-
-      <button
-        className="mainButton"
+      <Button
+        clas="mainButton"
         styles={{ marginTop: "30px" }}
-        onMouseEnter={() => playSoundHover()}
-        onClick={() => handleModalToModal()}
-      >
-        <PlusCircleOutlined className="iconButtons" />
-        Add New Vacancy
-      </button>
+        text="Add New Vacancy"
+        icon={<PlusCircleOutlined className="iconButtons" />}
+        clickFunc={handleModalToModal}
+        type="button"
+      />
 
-      <Modal
-        title="Create a Vacancy Card"
-        footer={null}
-        open={open}
-        onCancel={() => setOpen(false)}
-      >
-        <CreateCardForm />
+      <Modal footer={null} open={open} onCancel={() => setOpen(false)}>
+        <CardForm />
       </Modal>
     </div>
   );

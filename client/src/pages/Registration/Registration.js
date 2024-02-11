@@ -1,23 +1,9 @@
-import React, { useState } from "react";
-import {
-  AutoComplete,
-  Button,
-  Cascader,
-  Checkbox,
-  Col,
-  Form,
-  Input,
-  InputNumber,
-  Row,
-  Select,
-} from "antd";
-import { Link, Navigate } from "react-router-dom";
+import { Checkbox, Form, Input } from "antd";
+import { Navigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchRegistration, selectIsAuth } from "../../redux/slices/auth";
 import { useForm } from "react-hook-form";
-import styles from "./Registration.module.css";
-
-const { Option } = Select;
+import { useSound } from "../../components/utils/useSound";
 
 const formItemLayout = {
   labelCol: {
@@ -53,10 +39,12 @@ const tailFormItemLayout = {
 const Registration = () => {
   const isAuth = useSelector(selectIsAuth);
   const dispatch = useDispatch();
+  const playSoundClick = useSound("/audio/click-sound.mp3", 0.4);
+  const playSoundHover = useSound("/audio/hover-small.wav", 0.4);
+
   const {
     handleSubmit,
     formState: { errors, isValid },
-    setError,
   } = useForm({
     defaultValues: {
       email: "",
@@ -92,7 +80,7 @@ const Registration = () => {
         name="register"
         onFinish={(values) => handleSubmit(onSubmit(values))}
         scrollToFirstError
-        className='loginForm'
+        className="loginForm"
       >
         <Form.Item
           name="email"
@@ -107,6 +95,7 @@ const Registration = () => {
               message: "Please input your E-mail!",
             },
           ]}
+          onClick={() => playSoundClick()}
         >
           <Input size="large" />
         </Form.Item>
@@ -121,6 +110,7 @@ const Registration = () => {
             },
           ]}
           hasFeedback
+          onClick={() => playSoundClick()}
         >
           <Input.Password size="large" />
         </Form.Item>
@@ -146,6 +136,7 @@ const Registration = () => {
               },
             }),
           ]}
+          onClick={() => playSoundClick()}
         >
           <Input.Password size="large" />
         </Form.Item>
@@ -161,6 +152,7 @@ const Registration = () => {
               whitespace: true,
             },
           ]}
+          onClick={() => playSoundClick()}
         >
           <Input size="large" />
         </Form.Item>
@@ -176,11 +168,15 @@ const Registration = () => {
                   : Promise.reject(new Error("Should accept agreement")),
             },
           ]}
+          onClick={() => playSoundClick()}
           {...tailFormItemLayout}
         >
-          <Checkbox>
+          <Checkbox
+            onClick={() => playSoundClick()}
+            onMouseEnter={() => playSoundHover()}
+          >
             I have read the{" "}
-            <a href="" className='registrAgrrLink'>
+            <a href="" className="registrAgrrLink">
               agreement
             </a>
           </Checkbox>
@@ -191,6 +187,8 @@ const Registration = () => {
             htmlType="submit"
             className="mainButton"
             style={{ width: "100%" }}
+            onClick={() => playSoundClick()}
+            onMouseEnter={() => playSoundHover()}
           >
             Register
           </button>

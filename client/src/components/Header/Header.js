@@ -16,6 +16,7 @@ const HeaderCustom = () => {
   const navigate = useNavigate();
   const playSoundWarning = useSound("/audio/scout-message.wav", 0.3);
   const playSoundClick = useSound("/audio/click-sound.mp3", 0.4);
+  const playSoundHover = useSound("/audio/hover-small.wav", 0.4);
 
   const handleClick = () => {
     playSoundWarning();
@@ -54,7 +55,8 @@ const HeaderCustom = () => {
             <div className={styles.icon}>{userLabel}</div>
           </>
         ) : (
-          <Link to="/login">
+          <Link to="/login" onClick={() => playSoundClick()}
+          onMouseEnter={() => playSoundHover()}>
             <LoginOutlined className={styles.icon} />
           </Link>
         )}

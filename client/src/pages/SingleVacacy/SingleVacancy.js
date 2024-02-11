@@ -18,6 +18,7 @@ import { PaperClipOutlined, EditOutlined } from "@ant-design/icons";
 import { fetchUpdateCards } from "../../redux/slices/cards";
 import dayjs from "dayjs";
 import { useSound } from "../../components/utils/useSound";
+import Button from "../../components/UI/Button/Button";
 
 export const SingleVacancy = () => {
   const [data, setData] = useState();
@@ -26,7 +27,6 @@ export const SingleVacancy = () => {
   const [open, setOpen] = useState(false);
   const [confirmLoading, setConfirmLoading] = useState(false);
   const playSoundClick = useSound("/audio/click-sound.mp3", 0.4);
-  const playSoundHover = useSound("/audio/hover-small.wav", 0.4);
   const playSoundWarning = useSound("/audio/scout-message.wav", 0.3);
   const dispatch = useDispatch();
   const dateFormat = "YYYY/MM/DD";
@@ -179,7 +179,7 @@ export const SingleVacancy = () => {
             Description:
           </h2>
 
-          <p>
+          <p className={styles.text}>
             <span>
               <PaperClipOutlined />
             </span>
@@ -187,14 +187,13 @@ export const SingleVacancy = () => {
           </p>
         </div>
 
-        <button
-          className="mainButton"
-          onClick={() => handleModalToModal()}
-          onMouseEnter={() => playSoundHover()}
-        >
-          <EditOutlined className="iconButtons" />
-          Edit Your Vacancy
-        </button>
+        <Button
+          clas="mainButton"
+          text="Edit"
+          icon={<EditOutlined className="iconButtons" />}
+          clickFunc={handleModalToModal}
+          type="button"
+        />
 
         <Modal
           footer={null}
@@ -245,20 +244,17 @@ export const SingleVacancy = () => {
             <Form.Item
               wrapperCol={{
                 ...layout.wrapperCol,
-                offset: 21,
+                offset: 20,
               }}
             >
-              <button
-                className={styles.secandaryButton}
-                htmlType="submit"
-                onClick={() => {
-                  playSoundClick();
-                }}
-                onMouseEnter={()=> playSoundHover()}
-              >
-                ...
-                <EditOutlined />
-              </button>
+              <Button
+                clas="secandaryButton"
+                text="Edit"
+                icon={<EditOutlined  />}
+                clickFunc={() => console.log("click")}
+                type="submit"
+              />
+              
             </Form.Item>
           </Form>
         </Modal>

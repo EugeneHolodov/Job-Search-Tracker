@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { selectIsAuth } from "../../redux/slices/auth";
-
+import { useSound } from "../../components/utils/useSound";
 import "./HomePage.css";
 import {
   PaperClipOutlined,
@@ -40,18 +40,15 @@ const Cloud = ({ top, left, delay, text, icon, styles = "cloud" }) => {
 
 export const HomePage = () => {
   const isAuth = useSelector(selectIsAuth);
-  console.log(isAuth);
+  const playSoundClick = useSound("/audio/click-sound.mp3", 0.4);
+  const playSoundHover = useSound("/audio/hover-small.wav", 0.4);
+
   return (
     <div
+      className="bacgroundWraoer"
       style={{
         position: "relative",
-        width: "100%",
-        height: "100%",
-        minHeight: "600px",
         backgroundImage: `url(${process.env.PUBLIC_URL}/images/life_style_working_01.svg)`,
-        backgroundSize: "contain",
-        backgroundPosition: "center",
-        backgroundRepeat: "no-repeat",
       }}
     >
       <Cloud
@@ -63,7 +60,7 @@ export const HomePage = () => {
       />
       <Cloud
         top="50%"
-        left="75%"
+        left="70%"
         delay={500}
         text="Track your progress"
         icon={<RiseOutlined className="icon" />}
@@ -85,10 +82,14 @@ export const HomePage = () => {
       {isAuth ? (
         <></>
       ) : (
-        <Link to="/login">
+        <Link
+          to="/login"
+          onClick={() => playSoundClick()}
+          onMouseEnter={() => playSoundHover()}
+        >
           <Cloud
-            top="-10.8%"
-            left="10%"
+            top="0"
+            left="0"
             delay={2500}
             text="Get start"
             icon={<LeftOutlined className="btn" />}

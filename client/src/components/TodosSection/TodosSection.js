@@ -8,7 +8,7 @@ import {
   MinusCircleOutlined,
 } from "@ant-design/icons";
 import { GoTasklist, GoChecklist } from "react-icons/go";
-
+import Button from "../UI/Button/Button";
 import { Form, Input } from "antd";
 import { useParams, useLocation } from "react-router-dom";
 import { useDispatch } from "react-redux";
@@ -25,10 +25,8 @@ function TodosSection({ dataInit }) {
   const currentCardsRef = useRef(dataInit);
   const [form] = Form.useForm();
   const playSoundClick = useSound("/audio/click-sound.mp3", 0.4);
-  const playSoundHover = useSound("/audio/hover-small.wav", 0.4);
   const playSoundWarning = useSound("/audio/scout-message.wav", 0.3);
 
-  
   useEffect(() => {
     const handleUnload = async () => {
       try {
@@ -61,7 +59,6 @@ function TodosSection({ dataInit }) {
   }, [useLocation]);
 
   const handleLocalstorageChange = (dataStor, action, idForRemove) => {
-    
     const storedData = localStorage.getItem("myDataTodos");
 
     const existingData = storedData ? JSON.parse(storedData) : {};
@@ -160,7 +157,7 @@ function TodosSection({ dataInit }) {
       form.resetFields();
       setIsFormShowed(false);
     } else {
-      playSoundWarning()
+      playSoundWarning();
       window.alert("You have to fill input");
     }
   };
@@ -207,7 +204,7 @@ function TodosSection({ dataInit }) {
                       {...provided.draggableProps}
                       ref={provided.innerRef}
                     >
-                      <p>
+                      <p className={styles.todo}>
                         {name === "Doing" ? (
                           <span>
                             <PaperClipOutlined className={styles.iconDoing} />
@@ -274,15 +271,14 @@ function TodosSection({ dataInit }) {
                 <Input.TextArea autoSize={true} size="large" />
               </Form.Item>
               <Form.Item>
-                <button
-                  className={styles.todoButton}
-                  type="primary"
-                  htmlType="submit"
-                  onMouseEnter={() => playSoundHover()}
-                >
-                  <PlusCircleOutlined style={{ marginRight: "5px" }} />
-                  Add
-                </button>
+                <Button
+                  clas="secandaryButton"
+                  text="Add"
+                  icon={<PlusCircleOutlined />}
+                  clickFunc={() => console.log("click")}
+                  type="submit"
+                />
+                
               </Form.Item>
             </div>
           </Form>
@@ -312,4 +308,3 @@ function TodosSection({ dataInit }) {
 }
 
 export default TodosSection;
-

@@ -1,5 +1,6 @@
 h1 {
-  font-size: 46px;
+  font-size: 38px;
+  font-weight: 400;
   color: #f5faff;
   line-height: normal;
 }
@@ -60,6 +61,9 @@ h2 {
 }
 
 .mainButton {
+  display: flex;
+  align-items: center;
+  justify-content: center;
   background-color: transparent;
   border: 1px solid #000;
   border-radius: 10px;
@@ -91,6 +95,7 @@ h2 {
 
 .secandaryButton {
   display: flex;
+  align-items: center;
   gap: 5px;
   align-items: center;
   background-color: transparent;
@@ -142,3 +147,32 @@ h2 {
 .form-showed-buttons:hover {
   color: #ff9f3e;
 }
+
+@keyframes rotate {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.loading-icon {
+  display: inline-block;
+  width: 20px;
+  height: 20px;
+  margin-right: 10px;
+  animation: rotate 1s linear infinite;
+}
+
+.editor-statusbar {
+  color: #000;
+}
+
+@media screen and (max-width: 1000px) {
+  .headerMain {
+    font-size: 32px;
+  }
+  
+}
+

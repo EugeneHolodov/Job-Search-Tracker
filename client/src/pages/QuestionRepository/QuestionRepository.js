@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { selectIsAuth } from "../../redux/slices/auth";
 import {
@@ -7,19 +7,40 @@ import {
   fetchRemoveQuestions,
   fetchUpdateQuestions,
 } from "../../redux/slices/questions";
-import { Empty, Collapse, Form, Input, Rate } from "antd";
+import { Empty, Collapse, Form, Rate } from "antd";
 import { PlusCircleOutlined, MinusCircleOutlined } from "@ant-design/icons";
 import { GoEye, GoEyeClosed } from "react-icons/go";
-
+import Button from "../../components/UI/Button/Button";
 import { OrderedListOutlined, DeleteOutlined } from "@ant-design/icons";
 import styles from "./QuestionRepository.module.css";
+import SimpleMDE from "react-simplemde-editor";
+import "easymde/dist/easymde.min.css";
+import ReactMarkdown from "react-markdown";
+import { useSound } from "../../components/utils/useSound";
 
 const QuestionRepository = () => {
   const dispatch = useDispatch();
   const isAuth = useSelector(selectIsAuth);
   const [isFormShowed, setIsFormShowed] = useState(false);
-  const questions = useSelector((state) => state.questions.questions.items);
+  const [valueQuest, setValueQuest] = useState("Initial value");
+  const [valueAnsw, setValueAnsw] = useState("Initial value");
+  const playSoundClick = useSound("/audio/click-sound.mp3", 0.4);
+  const playSoundHover = useSound("/audio/hover-small.wav", 0.4);
+  const playSoundHoverCard = useSound("/audio/hover-sound.wav", 0.2);
+  const playSoundHoverTap = useSound("/audio/tap-sound.wav", 0.4);
+  const playSoundWarning = useSound("/audio/scout-message.wav", 0.3);
+  const playSoundDelete = useSound("/audio/delete-sound.wav", 0.3);
+  const questions = useSelector((state) => state.questions.questions);
+  const isQuestionLoading = questions.status === "loading";
   const [form] = Form.useForm();
+
+  const onChangeQuest = useCallback((value) => {
+    setValueQuest(value);
+  }, []);
+
+  const onChangeAnsw = useCallback((value) => {
+    setValueAnsw(value);
+  }, []);
 
   useEffect(() => {
     dispatch(fetchQuestions());
@@ -28,7 +49,6 @@ const QuestionRepository = () => {
   const panelStyle = {
     marginBottom: 24,
     background: "rgb(0,0,0, 0.1)",
-    color: "#ddeaf6",
     borderRadius: "10px",
     border: "1px solid #ddeaf6",
     padding: "15px",
@@ -36,7 +56,7 @@ const QuestionRepository = () => {
   };
 
   const getItems = () => {
-    const data = questions.map((question, index) => {
+    const data = questions.items.map((question, index) => {
       return {
         key: index,
         label: (
@@ -45,44 +65,72 @@ const QuestionRepository = () => {
               <Rate
                 defaultValue={question.status}
                 className={styles.rate}
-                onChange={(value) =>
-                  dispatch(fetchUpdateQuestions({ id: question._id, value }))
-                }
+                onChange={(value) => {
+                  playSoundHoverTap();
+                  dispatch(fetchUpdateQuestions({ id: question._id, value }));
+                }}
                 onClick={(event) => {
                   event.stopPropagation();
                 }}
-              />
-
-              <DeleteOutlined
-                className={styles.deleteIcon}
-                onClick={(event) => {
-                  event.stopPropagation();
-                  dispatch(fetchRemoveQuestions(question._id));
-                }}
-              />
+              />{" "}
+              <button
+                disabled={isQuestionLoading}
+                style={{ backgroundColor: "transparent", border: "none" }}
+              >
+                <DeleteOutlined
+                  className={styles.deleteIcon}
+                  onMouseEnter={() => playSoundHover()}
+                  onClick={(event) => {
+                    event.stopPropagation();
+                    playSoundWarning();
+                    if (
+                      window.confirm(
+                        "Are you sure you want to delete this question?"
+                      )
+                    ) {
+                      dispatch(fetchRemoveQuestions(question._id));
+                      playSoundDelete();
+                    }
+                  }}
+                />
+              </button>
             </div>
-            <p className={styles.question}><h4>{question.question}</h4></p>
+
+            <ReactMarkdown
+              className={styles.question}
+              children={question.question}
+            />
           </div>
         ),
-        children: <p className={styles.text}>{question.answer}</p>,
+        children: (
+          <ReactMarkdown className={styles.text} children={question.answer} />
+        ),
         style: panelStyle,
       };
     });
     return data;
   };
 
-  const handleOnFinish = (val) => {
-    if (!val.question || !val.answer) return alert("fill the inputs");
-    const data = {
-      question: val.question,
-      answer: val.answer,
-    };
-    dispatch(fetchCreateQuestions(data));
+  const handleOnFinish = async (val) => {
+    try {
+      if (!val.question || !val.answer) return alert("fill the inputs");
+      const data = {
+        question: valueQuest,
+        answer: valueAnsw,
+      };
+      const result = await dispatch(fetchCreateQuestions(data));
 
-    form.resetFields();
-    setIsFormShowed(false);
+      if (result.meta.requestStatus === "fulfilled") {
+        form.resetFields();
+        setIsFormShowed(false);
+      } else {
+        console.error("Create question failed:", result.error);
+      }
+    } catch (error) {
+      console.error("An error occurred:", error);
+    }
   };
-
+  console.log(isQuestionLoading, "delet knopka");
   return !isAuth ? (
     <Empty />
   ) : (
@@ -115,48 +163,34 @@ const QuestionRepository = () => {
           form={form}
           onFinish={(val) => handleOnFinish(val)}
           style={{
-            maxWidth: 600,
+            maxWidth: "100%",
           }}
         >
           <div className={styles.conteinForForm}>
-            <h2 className={styles.todoHeader}>Create a New Question</h2>
-            <Form.Item name="question">
-              <Input.TextArea
-                autoSize={true}
-                size="large"
-                rules={[
-                  {
-                    required: true,
-                    message: "Please input a question!",
-                  },
-                ]}
-              />
-            </Form.Item>
-            <h2 className={styles.todoHeader}>Add An Answer</h2>
-            <Form.Item name="answer">
-              <Input.TextArea
-                autoSize={true}
-                size="large"
-                rules={[
-                  {
-                    required: true,
-                    message: "Please input a answer!",
-                  },
-                ]}
-              />
-            </Form.Item>
-            <Form.Item>
-              <button
-                type="primary"
-                htmlType="submit"
-                className="mainButton"
-                style={{ marginBottom: "30px" }}
-              >
-                <PlusCircleOutlined className="iconButtons" />
-                Add The Question
-              </button>
-            </Form.Item>
+            <div>
+              <h2 className={styles.todoHeader}>Create a New Question</h2>
+              <Form.Item name="question">
+                <SimpleMDE value={valueQuest} onChange={onChangeQuest} />
+              </Form.Item>
+            </div>
+            <div>
+              <h2 className={styles.todoHeader}>Add An Answer</h2>
+              <Form.Item name="answer">
+                <SimpleMDE value={valueAnsw} onChange={onChangeAnsw} />
+              </Form.Item>
+            </div>
           </div>
+          <Form.Item>
+            <Button
+              clas="mainButton"
+              styles={{ marginBottom: "30px" }}
+              text="Add The Question"
+              icon={<PlusCircleOutlined className="iconButtons" />}
+              clickFunc={() => console.log("click")}
+              type="submit"
+              disabled={isQuestionLoading}
+            />
+          </Form.Item>
         </Form>
       )}
 
@@ -164,15 +198,11 @@ const QuestionRepository = () => {
         bordered={false}
         expandIcon={({ isActive }) =>
           isActive ? (
-            <GoEye style={{ fontSize: "22px" }} className={styles.icon} />
+            <GoEye style={{ fontSize: "22px" }} className={styles.iconOpen} />
           ) : (
             <GoEyeClosed style={{ fontSize: "22px" }} className={styles.icon} />
           )
         }
-        style={{
-          background: "#4c9aff",
-          alignItems: "center",
-        }}
         items={getItems()}
       />
     </div>

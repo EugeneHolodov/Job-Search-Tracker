@@ -1,13 +1,4 @@
-.secandaryButton {
-  display: flex;
-  font-size: 28px;
-  transition: transform 0.3s ease-in-out;
-  background-color: transparent;
-  border: none;
-}
-.secandaryButton:hover {
-  color: #eda35a;
-}
+
 
 .contein {
   color: #f5faff;
@@ -27,6 +18,11 @@
   gap: 10px;
   align-items: center;
   margin-bottom: 0px;
+  text-transform: capitalize;
+}
+
+.text {
+  text-transform: capitalize;
 }
 
 .deadlineHead {

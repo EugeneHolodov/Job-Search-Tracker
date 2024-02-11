@@ -104,3 +104,7 @@
   align-items: flex-start;
   gap: 35px;
 }
+
+.todo {
+  text-transform: capitalize;
+}

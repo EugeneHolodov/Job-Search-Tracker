@@ -36,7 +36,7 @@ export const fetchUpdateQuestions = createAsyncThunk(
 const initialState = {
   questions: {
     items: [],
-    status: "loading",
+    status: "loaded",
   },
 };
 
@@ -72,7 +72,7 @@ const questionSlice = createSlice({
       state.questions.status = "error";
     },
     //delete question by id
-    [fetchQuestions.pending]: (state) => {
+    [fetchRemoveQuestions.pending]: (state) => {
       state.questions.status = "loading";
     },
     [fetchRemoveQuestions.fulfilled]: (state, action) => {

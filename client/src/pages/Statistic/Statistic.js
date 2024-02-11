@@ -182,10 +182,9 @@ const Statistic = () => {
       </h1>
       <Table
         style={{ borderRadius: "10px" }}
-        bordered={true}
         columns={columns}
         scroll={{
-          x: 800,
+          x: 1000,
         }}
         dataSource={data}
         pagination={false}

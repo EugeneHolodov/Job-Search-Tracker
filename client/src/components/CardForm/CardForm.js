@@ -6,6 +6,7 @@ import { setAddCard } from "../../redux/slices/cards";
 import { useDispatch, useSelector } from "react-redux";
 import { PlusCircleOutlined } from "@ant-design/icons";
 import { useSound } from "../utils/useSound";
+import Button from "../UI/Button/Button";
 
 const CreateCardForm = () => {
   const dispatch = useDispatch();
@@ -42,11 +43,10 @@ const CreateCardForm = () => {
       deadline: fieldsValue["deadline"].format("YYYY-MM-DD"),
     };
     try {
-      
       const { data } = await axios.post("/cards", values);
       dispatch(setAddCard({ data, userData }));
       const id = data._id;
-      playSoundClick(); 
+      playSoundClick();
       setLoading(false);
       navigate(`/vacancy/${id}`);
     } catch (error) {
@@ -65,6 +65,7 @@ const CreateCardForm = () => {
       }}
       validateMessages={validateMessages}
     >
+      <h2 style={{marginBottom: "30px"}}> Create a Vacancy Card</h2>
       <Form.Item
         name="title"
         label="Company"
@@ -107,15 +108,13 @@ const CreateCardForm = () => {
           offset: 19,
         }}
       >
-        <button
-          className="secandaryButton"
-          htmlType="submit"
-          disabled={loading}
-          onMouseEnter={() => playSoundHover()}
-        >
-          <PlusCircleOutlined />
-          Create
-        </button>
+        <Button
+          clas="secandaryButton"
+          text="Create"
+          icon={<PlusCircleOutlined />}
+          clickFunc={() => console.log("click")}
+          type="submit"
+        />
       </Form.Item>
     </Form>
   );

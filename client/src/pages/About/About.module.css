@@ -1,5 +1,6 @@
 .contein {
   display: flex;
+  flex-direction: column;
   gap: 25px;
   font-size: 18px;
   letter-spacing: 1.15px;
@@ -9,31 +10,61 @@
   width: 100%;
 }
 
-
-.contein p {
-  margin: 0px;
-  text-align: justify;
-  background-color: rgba(0, 0, 0, 0.35);
-  padding: 25px;
-  border-radius: 20px;
+.sectionHeader {
+  font-weight: 400;
+  margin-bottom: 20px;
+  color: #ff9f3e;
 }
 
-.contein p:hover {
-  transform: scale(1.03);
+.description {
+  font-size: 18px;
+  margin-bottom: 10px;
+  word-spacing: 2px;
+}
+
+.contein section {
+  margin: 0px;
+  text-align: justify;
+  background-color: rgba(0, 0, 0, 0.45);
+  padding: 20px 50px;
+  border-radius: 10px;
+}
+
+.contein section:hover {
+  transform: scale(1.01);
   transition: transform 0.5s ease-in-out;
   background-color: rgba(0, 0, 0, 0.55);
 }
 
-.contein p svg {
+.contein section svg {
   fill: #ff9f3e;
   width: 24px;
   height: 24px;
   margin-right: 5px;
 }
+.contein h4 {
+  font-weight: 400;
+  margin-bottom: 5px;
+}
+
+.contein ol {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.contein li, p {
+  font-weight: 300;
+}
+
+.strong {
+  font-weight: 400;
+  color: #ff9f3e;
+}
+
 
 @media screen and (max-width: 1060px) {
   .contein {
-    flex-direction: column;
     gap: 15px;
   }
 }
