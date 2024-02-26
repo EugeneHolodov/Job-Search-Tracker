@@ -168,7 +168,7 @@ const App = () => {
         >
           <div className="demo-logo-vertical">
             <img
-              src={`${process.env.PUBLIC_URL}/images/Logo.svg`}
+              src={`${process.env.PUBLIC_URL}/images/logo.svg`}
               alt="Logo"
               className="logo"
             />
