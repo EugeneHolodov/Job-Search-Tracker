@@ -31,7 +31,6 @@ const App = () => {
   const playSoundHover = useSound("/audio/hover-small.wav", 0.4);
 
   const { pathname } = useLocation();
-  console.log("pathname", pathname);
 
   useEffect(() => {
     dispatch(fetchAuthMe());

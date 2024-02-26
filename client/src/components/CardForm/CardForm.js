@@ -13,7 +13,6 @@ const CreateCardForm = () => {
   const navigate = useNavigate();
   const userData = useSelector((state) => state.auth.data);
   const playSoundClick = useSound("/audio/click-sound.mp3", 0.4);
-  const playSoundHover = useSound("/audio/hover-small.wav", 0.4);
   const playSoundWarning = useSound("/audio/scout-message.wav", 0.3);
   const [loading, setLoading] = useState(false);
   const layout = {

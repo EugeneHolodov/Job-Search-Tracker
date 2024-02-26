@@ -44,7 +44,6 @@ const Registration = () => {
 
   const {
     handleSubmit,
-    formState: { errors, isValid },
   } = useForm({
     defaultValues: {
       email: "",
@@ -55,7 +54,6 @@ const Registration = () => {
 
   const onSubmit = async (values) => {
     const data = await dispatch(fetchRegistration(values));
-    console.log(data, "wqeqweqeq");
     if (!data.payload) {
       alert("Failed to registration");
     }

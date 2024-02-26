@@ -33,7 +33,6 @@ export const SingleVacancy = () => {
 
   const items = useSelector((state) => state.cards.cards.items);
   const dataFromState = items.find((card) => card._id === id);
-  console.log("В начале рендера компонента", items);
 
   const createdTime =
     data && data.createdAt && data.createdAt.length >= 10
@@ -74,7 +73,6 @@ export const SingleVacancy = () => {
       axios
         .get(`/cards/${id}`)
         .then((res) => {
-          console.log("myRess", res);
           setData(res.data);
           setIsLoading(false);
         })
@@ -250,11 +248,10 @@ export const SingleVacancy = () => {
               <Button
                 clas="secandaryButton"
                 text="Edit"
-                icon={<EditOutlined  />}
+                icon={<EditOutlined />}
                 clickFunc={() => console.log("click")}
                 type="submit"
               />
-              
             </Form.Item>
           </Form>
         </Modal>
@@ -266,7 +263,7 @@ export const SingleVacancy = () => {
           height: "auto",
         }}
       >
-        <TodosSection dataInit={data} />
+        <TodosSection cardId={data._id} cardData={data} />
       </div>
     </>
   );

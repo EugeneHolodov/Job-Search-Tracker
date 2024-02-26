@@ -14,15 +14,14 @@ import { useParams, useLocation } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { v4 as uuidv4 } from "uuid";
 import styles from "./TodosSection.module.css";
-import { fetchUpdateCards, setUpdateTodo } from "../../redux/slices/cards";
+import { fetchUpdateTodos, setUpdateTodo } from "../../redux/slices/cards";
 import { useSound } from "../utils/useSound";
 
-function TodosSection({ dataInit }) {
-  const [stores, setStores] = useState(dataInit.todos);
+function TodosSection({ cardId, cardData }) {
+  const [stores, setStores] = useState(cardData.todos);
   const [isFormShowed, setIsFormShowed] = useState(false);
   const { id } = useParams();
   const dispatch = useDispatch();
-  const currentCardsRef = useRef(dataInit);
   const [form] = Form.useForm();
   const playSoundClick = useSound("/audio/click-sound.mp3", 0.4);
   const playSoundWarning = useSound("/audio/scout-message.wav", 0.3);
@@ -34,12 +33,7 @@ function TodosSection({ dataInit }) {
         const dataToSend = storedData ? JSON.parse(storedData) : null;
 
         if (dataToSend) {
-          console.log("currentCardsRef.current", currentCardsRef.current);
-          const dataObj = {
-            ...currentCardsRef.current,
-            todos: dataToSend[`${id}`],
-          };
-          await dispatch(fetchUpdateCards({ id, values: dataObj }));
+          dispatch(fetchUpdateTodos({ id, values: dataToSend[`${id}`] }));
         }
       } catch (error) {
         console.error("Failed to update data on the server:", error);
@@ -278,7 +272,6 @@ function TodosSection({ dataInit }) {
                   clickFunc={() => console.log("click")}
                   type="submit"
                 />
-                
               </Form.Item>
             </div>
           </Form>

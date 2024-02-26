@@ -16,9 +16,11 @@ import {
 } from "./controllers/index.js";
 
 mongoose
-  .connect(process.env.MONGODB_URI)
+  .connect(
+    "mongodb+srv://Yevhenii:ZyKaM8eVyFJSGgSi@cluster0.ezmvihc.mongodb.net/jobSearchTracker?retryWrites=true&w=majority"
+  )
   .then(() => console.log("DB ok"))
-  .catch((err) => console.log("DB erorr", err));
+  .catch((err) => console.log("DB error", err));
 
 const app = express();
 
@@ -33,13 +35,12 @@ const storage = multer.diskStorage({
 
 const upload = multer({ storage });
 
-
 app.use(express.json());
 app.use(cors());
 app.use("/uploads", express.static("uploads"));
 
-app.get('/', (req, res) => {
-  res.send('Hello, world!');
+app.get("/", (req, res) => {
+  res.send("Hello, world!");
 });
 
 app.post(
@@ -79,6 +80,14 @@ app.patch(
   handleValidationErrors,
   CardController.update
 );
+
+app.patch(
+  "/cards/:id/todos",
+  checkAuth,
+  handleValidationErrors,
+  CardController.updateTodos
+);
+
 app.patch(
   "/cards",
   checkAuth,
@@ -107,5 +116,5 @@ app.listen(process.env.PORT || 4444, (error) => {
   if (error) {
     return console.log(`Error: ${error}`);
   }
-  console.log("Server ok");
+  console.log("Server ok" + process.env.PORT);
 });

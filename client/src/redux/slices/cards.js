@@ -15,8 +15,17 @@ export const fetchRemoveCards = createAsyncThunk(
 export const fetchUpdateCards = createAsyncThunk(
   "card/fetchUpdateCards",
   async ({ id, values }) => {
-    console.log("Данные на сервер", values);
     const { data } = await axios.patch(`/cards/${id}`, values);
+    return data;
+  }
+);
+
+export const fetchUpdateTodos = createAsyncThunk(
+  "card/fetchUpdateTodos",
+  async ({ id, values }) => {
+    console.log("Sended todos", { id, values });
+    const { data } = await axios.patch(`/cards/${id}/todos`, values);
+    console.log(data, "todos");
     return data;
   }
 );
@@ -24,7 +33,6 @@ export const fetchUpdateCards = createAsyncThunk(
 export const fetchUpdateAllCards = createAsyncThunk(
   "card/fetchUpdateAllCards",
   async (values) => {
-    console.log("AlUpdate val", values);
     const { data } = await axios.patch(`/cards`, values);
     return data;
   }
@@ -50,8 +58,6 @@ const cardsSlice = createSlice({
   initialState,
   reducers: {
     setUpdateTodo(state, action) {
-      console.log(action);
-
       const _id = action.payload.id;
       const updatedTodoData = action.payload.data;
       state.cards.items.map((obj) => {
@@ -82,13 +88,12 @@ const cardsSlice = createSlice({
         if (obj._id === _id) {
           obj = updatedCardData;
         }
-        
       });
 
       state.cards.status = "loaded";
     },
     setCleaneState(state) {
-      state.cards.items = []
+      state.cards.items = [];
     },
   },
   extraReducers: {
@@ -98,7 +103,6 @@ const cardsSlice = createSlice({
       state.cards.status = "loading";
     },
     [fetchCards.fulfilled]: (state, action) => {
-      
       state.cards.items = action.payload;
       state.cards.status = "loaded";
     },
@@ -113,9 +117,8 @@ const cardsSlice = createSlice({
       );
     },
     //updete crard by id
-    
+
     [fetchUpdateCards.fulfilled]: (state, action) => {
-      console.log("Данные из сервера", action.payload);
       const _id = action.payload._id;
 
       const updatedCard = action.payload;
@@ -129,13 +132,25 @@ const cardsSlice = createSlice({
       state.cards.status = "loaded";
     },
     [fetchUpdateCards.rejected]: (state, action) => {
-      console.log(action);
+      state.cards.status = "error";
+    },
+    //updete todos by id
+
+    [fetchUpdateTodos.fulfilled]: (state) => {
+      state.cards.status = "loaded";
+    },
+    [fetchUpdateTodos.rejected]: (state) => {
       state.cards.status = "error";
     },
   },
 });
 
-export const { setUpdateTodo, setAddCard, setUpdateCard, setUpdateCardState, setCleaneState } =
-  cardsSlice.actions;
+export const {
+  setUpdateTodo,
+  setAddCard,
+  setUpdateCard,
+  setUpdateCardState,
+  setCleaneState,
+} = cardsSlice.actions;
 
 export const cardsReducer = cardsSlice.reducer;

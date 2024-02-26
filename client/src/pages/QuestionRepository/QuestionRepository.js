@@ -130,7 +130,6 @@ const QuestionRepository = () => {
       console.error("An error occurred:", error);
     }
   };
-  console.log(isQuestionLoading, "delet knopka");
   return !isAuth ? (
     <Empty />
   ) : (

@@ -50,8 +50,6 @@ const SingleCard = ({ item, hoverFunc }) => {
     setStatusColor(stateIndicatorColor);
   }, [item.state, stateIndicatorColor]);
 
-  console.log("element tekushii", item);
-
   const todoList = item.todos[0].items.length ? (
     <ul className={styles.ulList}>
       {item.todos.map((column, index) => {
@@ -144,7 +142,6 @@ const SingleCard = ({ item, hoverFunc }) => {
   const onClickRemove = () => {
     playSoundWarning();
     if (window.confirm("Are you sure you want to delete the card?")) {
-      console.log(item._id);
       dispatch(fetchRemoveCards(item._id));
       handleLocalstorageRemove(item._id);
       playSoundDelete();

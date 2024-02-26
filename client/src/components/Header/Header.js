@@ -30,7 +30,6 @@ const HeaderCustom = () => {
   };
   const userLabel = isAuth ? data.nickname.charAt(0).toUpperCase() : "";
 
-  console.log("Ayth data", userLabel);
   return (
     <div className={styles.header}>
       {isSound ? (

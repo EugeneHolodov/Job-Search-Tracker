@@ -27,7 +27,6 @@ export const fetchRemoveQuestions = createAsyncThunk(
 export const fetchUpdateQuestions = createAsyncThunk(
   "questions/fetchUpdateQuestions",
   async ({ id, value }) => {
-    console.log("Данные на сервер", value);
     const { data } = await axios.patch(`/questions/${id}`, { status: value });
     return data;
   }
@@ -50,7 +49,6 @@ const questionSlice = createSlice({
       state.questions.status = "loading";
     },
     [fetchCreateQuestions.fulfilled]: (state, action) => {
-      console.log("Payload++", action.payload);
       state.questions.status = "loaded";
       state.questions.items = [...state.questions.items, action.payload];
     },
@@ -63,7 +61,6 @@ const questionSlice = createSlice({
       state.questions.status = "loading";
     },
     [fetchQuestions.fulfilled]: (state, action) => {
-      console.log(action);
       state.questions.items = action.payload;
       state.questions.status = "loaded";
     },
@@ -86,20 +83,16 @@ const questionSlice = createSlice({
       state.questions.status = "loading";
     },
     [fetchUpdateQuestions.fulfilled]: (state, action) => {
-      console.log("Данные из сервера", action.payload);
-
       const updatedQuestion = action.payload.updatedQuestion;
       const index = state.questions.items.findIndex(
         (question) => question._id === updatedQuestion._id
       );
-      console.log("Данные из сервера posle", updatedQuestion, index);
       if (index !== -1) {
         state.questions.items[index].status = updatedQuestion.status;
       }
       state.questions.status = "loaded";
     },
     [fetchUpdateQuestions.rejected]: (state, action) => {
-      console.log(action);
       state.questions.status = "error";
     },
   },
