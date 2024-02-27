@@ -1,4 +1,5 @@
-import { LockOutlined, UserOutlined } from "@ant-design/icons";
+import { useState } from "react";
+import { LockOutlined, UserOutlined, LoadingOutlined } from "@ant-design/icons";
 import { Checkbox, Form, Input } from "antd";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchAuth, selectIsAuth } from "../../redux/slices/auth";
@@ -9,9 +10,10 @@ import { useSound } from "../../components/utils/useSound";
 
 const Login = () => {
   const isAuth = useSelector(selectIsAuth);
+  const [isLoading, setIsLoading] = useState(false);
   const dispatch = useDispatch();
-  const playSoundClick = useSound("/audio/click-sound.mp3", 0.4);
-  const playSoundHover = useSound("/audio/hover-small.wav", 0.4);
+  const playSoundClick = useSound("/audio/click-sound.mp3", 0.05);
+  const playSoundHover = useSound("/audio/hover-small.wav", 0.05);
   const {
     handleSubmit,
     setError,
@@ -22,8 +24,9 @@ const Login = () => {
       password: "",
     },
   });
-  console.log(setError);
+
   const onSubmit = async (values) => {
+    setIsLoading(true);
     const data = await dispatch(fetchAuth(values));
     try {
       if ("token" in data.payload)
@@ -31,6 +34,7 @@ const Login = () => {
     } catch (error) {
       alert(`Failed to augth`);
       console.log(`error: ${error}`);
+      setIsLoading(false);
     }
   };
 
@@ -97,10 +101,11 @@ const Login = () => {
               type="primary"
               htmlType="submit"
               className="mainButton"
+              disabled={isLoading}
               onClick={() => playSoundClick()}
               onMouseEnter={() => playSoundHover()}
             >
-              Log in
+              {isLoading ? <LoadingOutlined /> : <span>Log in</span>}
             </button>
             <span>
               Or{" "}

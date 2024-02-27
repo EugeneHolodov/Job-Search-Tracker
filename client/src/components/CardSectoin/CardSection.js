@@ -19,11 +19,11 @@ const CardSection = () => {
   const dispatch = useDispatch();
   const isCardsLoading = cards.status === "loading";
   const navigate = useNavigate();
-  const playSoundClick = useSound("/audio/click-sound.mp3", 0.4);
-  const playSoundHover = useSound("/audio/hover-small.wav", 0.4);
-  const playSoundHoverCard = useSound("/audio/hover-sound.wav", 0.2);
-  const playSoundHoverTap = useSound("/audio/tap-sound.wav", 0.4);
-  const playSoundWarning = useSound("/audio/scout-message.wav", 0.3);
+  const playSoundClick = useSound("/audio/click-sound.mp3", 0.05);
+  const playSoundHover = useSound("/audio/hover-small.wav", 0.05);
+  const playSoundHoverCard = useSound("/audio/hover-sound.wav", 0.05);
+  const playSoundHoverTap = useSound("/audio/tap-sound.wav", 0.05);
+  const playSoundWarning = useSound("/audio/scout-message.wav", 0.05);
   const [open, setOpen] = useState(false);
   const [cardForRend, setCardForRend] = useState([]);
 

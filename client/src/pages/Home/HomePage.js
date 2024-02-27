@@ -40,8 +40,8 @@ const Cloud = ({ top, left, delay, text, icon, styles = "cloud" }) => {
 
 export const HomePage = () => {
   const isAuth = useSelector(selectIsAuth);
-  const playSoundClick = useSound("/audio/click-sound.mp3", 0.4);
-  const playSoundHover = useSound("/audio/hover-small.wav", 0.4);
+  const playSoundClick = useSound("/audio/click-sound.mp3", 0.05);
+  const playSoundHover = useSound("/audio/hover-small.wav", 0.05);
 
   return (
     <div

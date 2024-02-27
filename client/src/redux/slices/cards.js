@@ -23,9 +23,7 @@ export const fetchUpdateCards = createAsyncThunk(
 export const fetchUpdateTodos = createAsyncThunk(
   "card/fetchUpdateTodos",
   async ({ id, values }) => {
-    console.log("Sended todos", { id, values });
     const { data } = await axios.patch(`/cards/${id}/todos`, values);
-    console.log(data, "todos");
     return data;
   }
 );
@@ -57,17 +55,6 @@ const cardsSlice = createSlice({
   name: "cards",
   initialState,
   reducers: {
-    setUpdateTodo(state, action) {
-      const _id = action.payload.id;
-      const updatedTodoData = action.payload.data;
-      state.cards.items.map((obj) => {
-        if (obj._id === _id) {
-          obj.todos = updatedTodoData;
-        }
-      });
-
-      state.cards.status = "loaded";
-    },
     setAddCard(state, action) {
       const newCard = action.payload.data;
 
@@ -145,12 +132,7 @@ const cardsSlice = createSlice({
   },
 });
 
-export const {
-  setUpdateTodo,
-  setAddCard,
-  setUpdateCard,
-  setUpdateCardState,
-  setCleaneState,
-} = cardsSlice.actions;
+export const { setAddCard, setUpdateCard, setUpdateCardState, setCleaneState } =
+  cardsSlice.actions;
 
 export const cardsReducer = cardsSlice.reducer;

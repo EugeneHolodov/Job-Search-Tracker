@@ -23,10 +23,10 @@ import { useSound } from "../../utils/useSound";
 const SingleCard = ({ item, hoverFunc }) => {
   const dispatch = useDispatch();
   const { cards } = useSelector((state) => state.cards);
-  const playSoundClick = useSound("/audio/click-sound.mp3", 0.4);
-  const playSoundHover = useSound("/audio/hover-small.wav", 0.4);
-  const playSoundDelete = useSound("/audio/delete-sound.wav", 0.3);
-  const playSoundWarning = useSound("/audio/scout-message.wav", 0.3);
+  const playSoundClick = useSound("/audio/click-sound.mp3", 0.05);
+  const playSoundHover = useSound("/audio/hover-small.wav", 0.05);
+  const playSoundDelete = useSound("/audio/delete-sound.wav", 0.05);
+  const playSoundWarning = useSound("/audio/scout-message.wav", 0.05);
   const [statusColor, setStatusColor] = useState();
 
   let stateIndicatorColor = "#EDA35A";

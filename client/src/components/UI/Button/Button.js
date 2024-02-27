@@ -2,7 +2,7 @@ import { useSound } from "../../utils/useSound";
 import { AiOutlineLoading3Quarters } from "react-icons/ai";
 
 function Button({ clas, text, icon, clickFunc, type, disabled }) {
-  const playSoundHover = useSound("/audio/hover-small.wav", 0.4);
+  const playSoundHover = useSound("/audio/hover-small.wav", 0.05);
 
   return (
     <button

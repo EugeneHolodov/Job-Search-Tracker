@@ -12,8 +12,8 @@ const CreateCardForm = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const userData = useSelector((state) => state.auth.data);
-  const playSoundClick = useSound("/audio/click-sound.mp3", 0.4);
-  const playSoundWarning = useSound("/audio/scout-message.wav", 0.3);
+  const playSoundClick = useSound("/audio/click-sound.mp3", 0.05);
+  const playSoundWarning = useSound("/audio/scout-message.wav", 0.05);
   const [loading, setLoading] = useState(false);
   const layout = {
     labelCol: {

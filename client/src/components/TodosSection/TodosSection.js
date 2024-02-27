@@ -14,7 +14,7 @@ import { useParams, useLocation } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { v4 as uuidv4 } from "uuid";
 import styles from "./TodosSection.module.css";
-import { fetchUpdateTodos, setUpdateTodo } from "../../redux/slices/cards";
+import { fetchUpdateTodos } from "../../redux/slices/cards";
 import { useSound } from "../utils/useSound";
 
 function TodosSection({ cardId, cardData }) {
@@ -23,8 +23,8 @@ function TodosSection({ cardId, cardData }) {
   const { id } = useParams();
   const dispatch = useDispatch();
   const [form] = Form.useForm();
-  const playSoundClick = useSound("/audio/click-sound.mp3", 0.4);
-  const playSoundWarning = useSound("/audio/scout-message.wav", 0.3);
+  const playSoundClick = useSound("/audio/click-sound.mp3", 0.05);
+  const playSoundWarning = useSound("/audio/scout-message.wav", 0.05);
 
   useEffect(() => {
     const handleUnload = async () => {
@@ -74,7 +74,6 @@ function TodosSection({ cardId, cardData }) {
 
     // update data in localStorage and state
     localStorage.setItem("myDataTodos", JSON.stringify(existingData));
-    dispatch(setUpdateTodo({ id, data: existingData[id] }));
     return existingData[id];
   };
 

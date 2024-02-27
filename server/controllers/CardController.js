@@ -140,7 +140,6 @@ export const update = async (req, res) => {
 };
 
 export const updateTodos = async (req, res) => {
-  console.log(req.body, "body Targ");
   try {
     const cardId = req.params.id;
     let updateData;

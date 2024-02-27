@@ -55,9 +55,10 @@ h2 {
   padding: 0 10px;
 }
 
-.smallIcon {
+.smallIcon > svg {
   width: 22px;
   height: 22px;
+  margin-right: 5px;
 }
 
 .mainButton {
@@ -78,7 +79,6 @@ h2 {
   background-color: #2b558c;
   color: #f5faff;
   border-color: transparent;
-  
 }
 
 .loginForm {
@@ -148,23 +148,6 @@ h2 {
   color: #ff9f3e;
 }
 
-@keyframes rotate {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
-}
-
-.loading-icon {
-  display: inline-block;
-  width: 20px;
-  height: 20px;
-  margin-right: 10px;
-  animation: rotate 1s linear infinite;
-}
-
 .editor-statusbar {
   color: #000;
 }
@@ -173,6 +156,4 @@ h2 {
   .headerMain {
     font-size: 32px;
   }
-  
 }
-

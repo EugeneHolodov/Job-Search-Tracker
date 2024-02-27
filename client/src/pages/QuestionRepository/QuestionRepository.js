@@ -24,12 +24,10 @@ const QuestionRepository = () => {
   const [isFormShowed, setIsFormShowed] = useState(false);
   const [valueQuest, setValueQuest] = useState("Initial value");
   const [valueAnsw, setValueAnsw] = useState("Initial value");
-  const playSoundClick = useSound("/audio/click-sound.mp3", 0.4);
-  const playSoundHover = useSound("/audio/hover-small.wav", 0.4);
-  const playSoundHoverCard = useSound("/audio/hover-sound.wav", 0.2);
-  const playSoundHoverTap = useSound("/audio/tap-sound.wav", 0.4);
-  const playSoundWarning = useSound("/audio/scout-message.wav", 0.3);
-  const playSoundDelete = useSound("/audio/delete-sound.wav", 0.3);
+  const playSoundHover = useSound("/audio/hover-small.wav", 0.05);
+  const playSoundHoverTap = useSound("/audio/tap-sound.wav", 0.05);
+  const playSoundWarning = useSound("/audio/scout-message.wav", 0.05);
+  const playSoundDelete = useSound("/audio/delete-sound.wav", 0.05);
   const questions = useSelector((state) => state.questions.questions);
   const isQuestionLoading = questions.status === "loading";
   const [form] = Form.useForm();

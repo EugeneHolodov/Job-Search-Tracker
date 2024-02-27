@@ -26,8 +26,8 @@ export const SingleVacancy = () => {
   const { id } = useParams();
   const [open, setOpen] = useState(false);
   const [confirmLoading, setConfirmLoading] = useState(false);
-  const playSoundClick = useSound("/audio/click-sound.mp3", 0.4);
-  const playSoundWarning = useSound("/audio/scout-message.wav", 0.3);
+  const playSoundClick = useSound("/audio/click-sound.mp3", 0.05);
+  const playSoundWarning = useSound("/audio/scout-message.wav", 0.05);
   const dispatch = useDispatch();
   const dateFormat = "YYYY/MM/DD";
 

@@ -98,7 +98,5 @@ const questionSlice = createSlice({
   },
 });
 
-//   export const { setUpdateTodo, setAddCard, setUpdateCard, setUpdateCardState, setCleaneState } =
-//   questionSlice.actions;
 
 export const questionsReducer = questionSlice.reducer;

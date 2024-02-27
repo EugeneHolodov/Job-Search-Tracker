@@ -12,8 +12,8 @@ import {
   InfoCircleOutlined,
   BarChartOutlined,
   OrderedListOutlined,
+  AppstoreAddOutlined,
 } from "@ant-design/icons";
-import { GoStack } from "react-icons/go";
 import About from "./pages/About/About.jsx";
 import Registration from "./pages/Registration/Registration.js";
 import Login from "./pages/Login/Login.js";
@@ -27,8 +27,8 @@ import { useSound } from "./components/utils/useSound.js";
 
 const App = () => {
   const dispatch = useDispatch();
-  const playSoundClick = useSound("/audio/click-sound.mp3", 0.4);
-  const playSoundHover = useSound("/audio/hover-small.wav", 0.4);
+  const playSoundClick = useSound("/audio/click-sound.mp3", 0.05);
+  const playSoundHover = useSound("/audio/hover-small.wav", 0.05);
 
   const { pathname } = useLocation();
 
@@ -56,7 +56,7 @@ const App = () => {
         Home
       </Link>,
       "/",
-      <HomeOutlined />
+      <HomeOutlined className="smallIcon"/>
     ),
     getItem(
       <Link
@@ -67,7 +67,7 @@ const App = () => {
         Vacancy List
       </Link>,
       "/vacancy",
-      <GoStack />
+      <AppstoreAddOutlined className="smallIcon"/>
     ),
     getItem(
       <Link
@@ -78,7 +78,7 @@ const App = () => {
         Statistic
       </Link>,
       "/statistic",
-      <BarChartOutlined />
+      <BarChartOutlined className="smallIcon"/>
     ),
     getItem(
       <Link
@@ -89,7 +89,7 @@ const App = () => {
         Questions
       </Link>,
       "/question",
-      <OrderedListOutlined />
+      <OrderedListOutlined className="smallIcon"/>
     ),
     getItem(
       <Link
@@ -100,7 +100,7 @@ const App = () => {
         About
       </Link>,
       "/about",
-      <InfoCircleOutlined />
+      <InfoCircleOutlined className="smallIcon"/>
     ),
   ];
 
@@ -131,8 +131,6 @@ const App = () => {
             darkItemHoverColor: "#D2FDFF",
             darkItemBg: "#3265a6",
             darkSubMenuItemBg: "#3265a6",
-            iconMarginInlineEnd: 15,
-            iconSize: 22,
           },
           Modal: {
             titleLineHeight: 3.5,

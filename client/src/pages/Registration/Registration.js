@@ -1,6 +1,8 @@
 import { Checkbox, Form, Input } from "antd";
+import { useState } from "react";
 import { Navigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
+import { LoadingOutlined } from "@ant-design/icons";
 import { fetchRegistration, selectIsAuth } from "../../redux/slices/auth";
 import { useForm } from "react-hook-form";
 import { useSound } from "../../components/utils/useSound";
@@ -39,12 +41,11 @@ const tailFormItemLayout = {
 const Registration = () => {
   const isAuth = useSelector(selectIsAuth);
   const dispatch = useDispatch();
-  const playSoundClick = useSound("/audio/click-sound.mp3", 0.4);
-  const playSoundHover = useSound("/audio/hover-small.wav", 0.4);
+  const [isLoading, setIsLoading] = useState(false);
+  const playSoundClick = useSound("/audio/click-sound.mp3", 0.05);
+  const playSoundHover = useSound("/audio/hover-small.wav", 0.05);
 
-  const {
-    handleSubmit,
-  } = useForm({
+  const { handleSubmit } = useForm({
     defaultValues: {
       email: "",
       password: "",
@@ -53,9 +54,11 @@ const Registration = () => {
   });
 
   const onSubmit = async (values) => {
+    setIsLoading(true);
     const data = await dispatch(fetchRegistration(values));
     if (!data.payload) {
       alert("Failed to registration");
+      setIsLoading(false);
     }
     if ("token" in data.payload) {
       window.localStorage.setItem("token", data.payload.token);
@@ -106,6 +109,9 @@ const Registration = () => {
               required: true,
               message: "Please input your password!",
             },
+            {
+              min: 6,
+            },
           ]}
           hasFeedback
           onClick={() => playSoundClick()}
@@ -149,6 +155,9 @@ const Registration = () => {
               message: "Please input your nickname!",
               whitespace: true,
             },
+            {
+              min: 3,
+            },
           ]}
           onClick={() => playSoundClick()}
         >
@@ -187,8 +196,9 @@ const Registration = () => {
             style={{ width: "100%" }}
             onClick={() => playSoundClick()}
             onMouseEnter={() => playSoundHover()}
+            disabled={isLoading}
           >
-            Register
+            {isLoading ? <LoadingOutlined /> : <span>Log in</span>}
           </button>
         </Form.Item>
       </Form>

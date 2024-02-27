@@ -14,9 +14,9 @@ const HeaderCustom = () => {
   const isAuth = useSelector(selectIsAuth);
   const { data } = useSelector((state) => state.auth);
   const navigate = useNavigate();
-  const playSoundWarning = useSound("/audio/scout-message.wav", 0.3);
-  const playSoundClick = useSound("/audio/click-sound.mp3", 0.4);
-  const playSoundHover = useSound("/audio/hover-small.wav", 0.4);
+  const playSoundWarning = useSound("/audio/scout-message.wav", 0.05);
+  const playSoundClick = useSound("/audio/click-sound.mp3", 0.05);
+  const playSoundHover = useSound("/audio/hover-small.wav", 0.05);
 
   const handleClick = () => {
     playSoundWarning();
