@@ -129,7 +129,13 @@ const QuestionRepository = () => {
     }
   };
   return !isAuth ? (
-    <Empty />
+    <div className="bacgroundWraoer">
+      <h1 className="headerMain">
+        <OrderedListOutlined className="infoIcon" />
+        Your Question Repository
+      </h1>
+      <Empty />
+    </div>
   ) : (
     <div
       className="bacgroundWraoer"
