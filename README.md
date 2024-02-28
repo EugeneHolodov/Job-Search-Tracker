@@ -1,0 +1,2 @@
+-- This is a web application I built using React. 
+-- It is designed to assist in job search by allowing users to add job vacancy cards to their personal dashboard, track their progress, and prepare for interview questions.
